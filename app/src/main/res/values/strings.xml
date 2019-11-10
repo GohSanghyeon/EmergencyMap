@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">emergencyMap</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">홈</string>
+    <string name="menu_tutorial">어플 사용법</string>
+    <string name="menu_slideshow">구조 용품 사용법</string>
+    <string name="menu_tools">기능3</string>
+    <string name="menu_share">기능4</string>
+    <string name="menu_send">라이센스</string>
+</resources>
