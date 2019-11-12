@@ -20,17 +20,17 @@ import androidx.annotation.UiThread
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.util.FusedLocationSource
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var locationSource: FusedLocationSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
         //네이버 맵
         NaverMapSdk.getInstance(this).client = NaverMapSdk.NaverCloudPlatformClient("af5bvg9isp")
 
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         mapFragment.getMapAsync(this)
-
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -82,15 +82,27 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
+        if (locationSource.onRequestPermissionsResult(requestCode, permissions,
+                grantResults)) {
+            return
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
-            Toast.makeText(this, "지도 준비 완료", Toast.LENGTH_SHORT).show()
-            val marker = Marker()
-            naverMap.isIndoorEnabled = true
-            marker.position = LatLng(37.30260779, 127.9211684)
 
+            val marker = Marker()
+            marker.position = LatLng(37.30260779, 127.9211684)
             marker.map = naverMap
+            naverMap.locationSource = locationSource
     }
 
+    companion object{
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+
+    }
 }
