@@ -1,0 +1,16 @@
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(date 1573543552000)
++++ app/src/main/AndroidManifest.xml	(date 1573543585002)
+@@ -8,7 +8,7 @@
+     <!--WIFI 상태활용시 추가--><uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+     <!--WIFI 상태활용시 추가--><uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+ 
+-    
++
+     <application
+         android:allowBackup="true"
+         android:icon="@mipmap/ic_launcher"
