@@ -40,6 +40,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        PermissionManager.showRequest(this, permissionForEssential, PERMISSIONCODE_Essential,
+            "어플리케이션 내 ", "SMS, 위치, 파일 읽기")
+
         //네이버 맵 클라이언트 ID 받아오기
         NaverMapSdk.getInstance(this).client = NaverMapSdk.NaverCloudPlatformClient("af5bvg9isp")
 
@@ -121,14 +124,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-
-    
-
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
         val marker = Marker()
+        val heungup = LatLng(37.30260779, 127.9211684)
+        marker.position = heungup
+        marker.width = 50
+        marker.height = 80
+        naverMap.moveCamera(CameraUpdate.scrollTo(heungup))
         marker.map = naverMap
-
     }
 
     companion object{

@@ -7,6 +7,8 @@
     <!--위치정보활용시 추가--><uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <!--WIFI 상태활용시 추가--><uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <!--WIFI 상태활용시 추가--><uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
 
     <application
