@@ -122,6 +122,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
+    
+
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
         val marker = Marker()
