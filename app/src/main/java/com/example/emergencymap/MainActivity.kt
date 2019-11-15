@@ -106,6 +106,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item?.itemId){
+            R.id.howtool ->{
+
+            }
+            R.id.searchtool ->{
+
+            }
+            R.id.apptuto ->{
+
+            }
+        }
 
         return super.onOptionsItemSelected(item)
     }
