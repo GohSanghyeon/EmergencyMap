@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-
+    
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
         val marker = Marker()
