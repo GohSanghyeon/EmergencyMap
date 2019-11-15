@@ -1,4 +1,4 @@
-package com.example.emergencymap.ui.send
+package com.example.emergencymap.ui.License
 
 import android.os.Bundle
 import android.view.LayoutInflater
