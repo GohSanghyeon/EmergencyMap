@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.noButton
@@ -39,9 +40,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        PermissionManager.showRequest(this, permissionForEssential, PERMISSIONCODE_Essential,
-            "어플리케이션 내 ", "SMS, 위치, 파일 읽기")
 
         //네이버 맵 클라이언트 ID 받아오기
         NaverMapSdk.getInstance(this).client = NaverMapSdk.NaverCloudPlatformClient("af5bvg9isp")
@@ -124,16 +122,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
         val marker = Marker()
         val heungup = LatLng(37.30260779, 127.9211684)
+        val cameraPosition: CameraPosition
         marker.position = heungup
+        naverMap.moveCamera(CameraUpdate.scrollTo(heungup))
+        naverMap.cameraPosition
+        marker.map = naverMap
         marker.width = 50
         marker.height = 80
-        naverMap.moveCamera(CameraUpdate.scrollTo(heungup))
-        marker.map = naverMap
+        marker.icon = OverlayImage.fromResource(R.drawable.aed)
+
     }
+
+
 
     companion object{
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
