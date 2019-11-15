@@ -17,9 +17,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".howtoBangdock"
+        <activity android:name=".howtoFIRE"
             android:parentActivityName=".howtoolActivity"></activity>
-        <activity android:name=".howtoAED"
+        <activity android:name=".howtoSEA" android:parentActivityName=".howtoolActivity"/>
+        <activity
+            android:name=".howtoBangdock"
+            android:parentActivityName=".howtoolActivity" />
+        <activity
+            android:name=".howtoAED"
             android:parentActivityName=".howtoolActivity" />
         <activity
             android:name=".howtoolActivity"

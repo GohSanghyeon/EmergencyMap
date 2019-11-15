@@ -1,7 +1,6 @@
 package com.example.emergencymap
 
 import android.content.Intent
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_howtool.*
@@ -21,5 +20,15 @@ class howtoolActivity : AppCompatActivity() {
             val intent = Intent(this, howtoBangdock::class.java)
             startActivity(intent)
         }
+
+        fireProtect_btn.setOnClickListener {
+            val intent = Intent(this, howtoFIRE::class.java)
+            startActivity(intent)
+        }
+        seaProtect_btn.setOnClickListener{
+            val intent = Intent(this, howtoSEA::class.java)
+            startActivity(intent)
+        }
+
     }
 }
