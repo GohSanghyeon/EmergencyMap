@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.noButton
@@ -122,14 +123,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-    
-
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
         val marker = Marker()
+        val heungup = LatLng(37.30260779, 127.9211684)
+        val cameraPosition: CameraPosition
+        marker.position = heungup
+        naverMap.moveCamera(CameraUpdate.scrollTo(heungup))
+        naverMap.cameraPosition
         marker.map = naverMap
+        marker.width = 50
+        marker.height = 80
+        marker.icon = OverlayImage.fromResource(R.drawable.aed)
 
     }
+
+
 
     companion object{
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
