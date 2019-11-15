@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.app.Application
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.view.MenuItem
 import android.widget.Toast
@@ -106,16 +107,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item?.itemId){
-            R.id.howtool ->{
+        when(item.itemId){
 
-            }
-            R.id.searchtool ->{
-
-            }
             R.id.apptuto ->{
 
             }
+            R.id.howtool ->{
+                val intent = Intent(this, howtoolActivity::class.java)
+                startActivity(intent)
+            }
+
         }
 
         return super.onOptionsItemSelected(item)
@@ -152,8 +153,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-
-
+    
     companion object{
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
 
