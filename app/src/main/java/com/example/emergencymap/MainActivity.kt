@@ -1,5 +1,6 @@
 package com.example.emergencymap
 
+import android.Manifest
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -14,24 +15,32 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.app.Application
+import android.content.pm.PackageManager
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.UiThread
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.noButton
+import org.jetbrains.anko.yesButton
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var locationSource: FusedLocationSource
+    private val REQUEST_ACCESS_FINE_LOCATION = 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        //네이버 맵
+
+        //네이버 맵 클라이언트 ID 받아오기
         NaverMapSdk.getInstance(this).client = NaverMapSdk.NaverCloudPlatformClient("af5bvg9isp")
 
         val fm = supportFragmentManager
@@ -65,6 +74,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
+    public fun permissionCheck(cancel: ()-> Unit, ok: () -> Unit){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+                cancel()
+            }else{
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_ACCESS_FINE_LOCATION)
+            }
+        }else{
+            ok()
+        }
+    }
+    public fun showPermissionInfoDialog(){
+        alert("현재 위치 정보를 얻으려면 위치 권한이 필요합니다", "권한이 필요한 이유"){
+            yesButton{
+                ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_ACCESS_FINE_LOCATION)
+            }
+            noButton {  }
+        }.show()
+
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -92,13 +121,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
+        val marker = Marker()
+        marker.map = naverMap
 
-            val marker = Marker()
-            marker.position = LatLng(37.30260779, 127.9211684)
-            marker.map = naverMap
-            naverMap.locationSource = locationSource
     }
 
     companion object{

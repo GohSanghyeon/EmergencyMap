@@ -10,5 +10,4 @@ class HomeViewModel : ViewModel() {
         value = "Map Loading..."
     }
     val text: LiveData<String> = _text
-
 }
