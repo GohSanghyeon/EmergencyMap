@@ -41,6 +41,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        PermissionManager.showRequest(this, permissionForEssential, PERMISSIONCODE_Essential,
+            "어플리케이션의 원활한 ", "위치 조회, SMS, 파일 읽기")
+
         //네이버 맵 클라이언트 ID 받아오기
         NaverMapSdk.getInstance(this).client = NaverMapSdk.NaverCloudPlatformClient("af5bvg9isp")
 
