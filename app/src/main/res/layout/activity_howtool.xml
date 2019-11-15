@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#2CC410E4"
-    tools:context=".howtoolActivity">
+    tools:context=".HowToolActivity">
 
     <Button
         android:id="@+id/aed_btn"

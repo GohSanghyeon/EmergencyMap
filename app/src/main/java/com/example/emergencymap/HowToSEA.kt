@@ -3,11 +3,12 @@ package com.example.emergencymap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
-class howtoBangdock : AppCompatActivity() {
+class HowToSEA : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_howto_bangdock)
-        setTitle("방독면 사용법")
+        setContentView(R.layout.activity_sea_pro)
+        setTitle("해상 구조 용품 사용법")
+
     }
 }

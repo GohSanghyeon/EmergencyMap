@@ -7,28 +7,187 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_height="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <include
+            android:id="@+id/include"
+            layout="@layout/content_main"
+            tools:layout_editor_absoluteX="67dp"
+            tools:layout_editor_absoluteY="-16dp" />
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </com.google.android.material.appbar.AppBarLayout>
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    <include layout="@layout/content_main"/>
+        </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        <Button
+            android:id="@+id/buttonEmergency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_square_emergency"
+            android:text="응급상황"
+            android:padding="@dimen/button_general_padding"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="30dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@android:drawable/ic_dialog_email" />
+
+        <Button
+            android:id="@+id/buttonList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/rounded_square_general"
+            android:padding="@dimen/button_general_padding"
+            android:text="리스트"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/buttonSaveFromMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/rounded_square_general"
+            android:padding="@dimen/button_general_padding"
+            android:text="화면 내 구조용품 위치 저장"
+            android:textColor="@android:color/white"
+            app:layout_constraintEnd_toStartOf="@+id/buttonList"
+            app:layout_constraintTop_toTopOf="@+id/buttonList" />
+
+        <Button
+            android:id="@+id/buttonNowLocation"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/transparency"
+            android:foreground="@drawable/ic_gps_fixed_black_24dp"
+            android:foregroundTint="@android:color/black"
+            android:padding="@dimen/button_general_padding"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonSaveFromMap"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TableLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/rounded_square_whitecloud"
+            app:layout_constraintBottom_toTopOf="@+id/buttonSaveFromMap"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/button_general_padding">
+
+                <View
+                    android:id="@+id/divider0"
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/black" />
+
+                <ToggleButton
+                    android:id="@+id/buttonLocationAED"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/transparency"
+                    android:padding="@dimen/button_general_padding"
+                    android:textOff="AED"
+                    android:textOn="AED" />
+
+                <View
+                    android:id="@+id/divider1"
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/black" />
+
+                <ToggleButton
+                    android:id="@+id/buttonLocationGasMask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/transparency"
+                    android:textOff="방독면"
+                    android:textOn="방독면" />
+
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/black" />
+
+                <ToggleButton
+                    android:id="@+id/buttonLocationFireplug"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/transparency"
+                    android:text="ToggleButton"
+                    android:textOff="소화전"
+                    android:textOn="소화전" />
+
+                <View
+                    android:id="@+id/divider3"
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/black" />
+
+                <ToggleButton
+                    android:id="@+id/buttonLocationWaterEquip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/transparency"
+                    android:textOff="해상구조용품"
+                    android:textOn="해상구조용품"
+                    android:textSize="11sp" />
+
+                <View
+                    android:id="@+id/divider4"
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/black" />
+            </TableRow>
+
+        </TableLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

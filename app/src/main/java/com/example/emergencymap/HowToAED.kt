@@ -13,7 +13,7 @@ import com.google.android.youtube.player.internal.v
 import kotlinx.android.synthetic.main.activity_howto_aed.*
 
 
-class howtoAED : YouTubeBaseActivity() {
+class HowToAED : YouTubeBaseActivity() {
     companion object{
         val VIDEO_ID : String = "A_3fH2zZ9i4";
         val YOUTUBE_API_KEY: String = "AIzaSyDMvyFMCLyeilRPFf4WHuge72wUg6eXZJ4"

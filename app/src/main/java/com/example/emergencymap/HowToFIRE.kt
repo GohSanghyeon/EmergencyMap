@@ -3,7 +3,7 @@ package com.example.emergencymap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
-class howtoFIRE : AppCompatActivity() {
+class HowToFIRE : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

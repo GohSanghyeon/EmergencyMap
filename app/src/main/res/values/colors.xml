@@ -3,4 +3,10 @@
     <color name="colorPrimary">#E90823</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="colorEmergencyLight">#FF8888</color>
+    <color name="colorEmergencyDark">#FF0000</color>
+    <color name="colorGeneralLight">#7CC8FF</color>
+    <color name="colorGeneralDark">#1978FF</color>
+    <color name="colorWhiteCloud">#88FFFFFF</color>
+    <color name="transparency">#00000000</color>
 </resources>
