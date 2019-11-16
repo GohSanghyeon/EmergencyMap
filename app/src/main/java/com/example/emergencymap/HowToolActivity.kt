@@ -11,6 +11,7 @@ class HowToolActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_howtool)
         setTitle("구조 용품 사용법")
+
         aed_btn.setOnClickListener {
             val intent = Intent(this, HowToAED::class.java)
             startActivity(intent)
