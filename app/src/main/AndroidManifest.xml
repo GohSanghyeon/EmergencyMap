@@ -17,12 +17,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HowToFIRE"
-            android:parentActivityName=".HowToolActivity"></activity>
-        <activity android:name=".HowToSEA" android:parentActivityName=".HowToolActivity"/>
-        <activity
-            android:name=".HowToGasMask"
-            android:parentActivityName=".HowToolActivity" />
         <activity
             android:name=".HowToAED"
             android:parentActivityName=".HowToolActivity" />
