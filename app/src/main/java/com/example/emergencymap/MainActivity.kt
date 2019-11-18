@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
             }
             R.id.howtool ->
-                startActivity(Intent(this, HowToolActivity::class.java))
+                startActivity(Intent(this, SelectionForEducation::class.java))
         }
 
         return super.onOptionsItemSelected(item)

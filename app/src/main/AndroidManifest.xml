@@ -18,10 +18,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".HowToAED"
-            android:parentActivityName=".HowToolActivity" />
+            android:name=".HowToWithYoutube"
+            android:parentActivityName=".SelectionForEducation" />
         <activity
-            android:name=".HowToolActivity"
+            android:name=".SelectionForEducation"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
