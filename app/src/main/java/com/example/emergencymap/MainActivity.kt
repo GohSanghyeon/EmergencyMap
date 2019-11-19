@@ -11,7 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.content.Intent
 import android.view.MenuItem
+import android.view.View
 import androidx.annotation.UiThread
+import androidx.core.view.isVisible
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -21,6 +23,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.toast
+
+
+
+
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -54,7 +60,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         buttonEmergency.setOnClickListener {
-            
+            layoutEmergencySelection.visibility = View.VISIBLE
         }
     }
 

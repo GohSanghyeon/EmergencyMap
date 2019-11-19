@@ -48,6 +48,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 
+        <LinearLayout
+            android:id="@+id/layoutEmergencySelection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/rounded_square_whiteframe"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@+id/buttonEmergency"
+            app:layout_constraintTop_toTopOf="@+id/buttonEmergency">
+
+            <Button
+                android:id="@+id/buttonEmergencySMS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:text="비상신고"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/buttonEmergencyManual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:text="응급교육"
+                android:textSize="18sp" />
+        </LinearLayout>
+
         <Button
             android:id="@+id/buttonList"
             android:layout_width="wrap_content"
