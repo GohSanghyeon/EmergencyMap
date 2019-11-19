@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var locationSource: FusedLocationSource
+    private var map: NaverMap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +71,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapFragment.getMapAsync(this)
         locationSource = FusedLocationSource(this, PERMISSIONCODE_Essential)
+
+        val marker = Marker()
+        marker.map
     }
 
     private fun setEmergencyButton(){
@@ -121,5 +125,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         marker.width = 50
         marker.height = 80
         marker.icon = OverlayImage.fromResource(R.drawable.aed)
+
+        map = naverMap
     }
 }
