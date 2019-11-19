@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -74,7 +75,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun setEmergencyButton(){
         buttonEmergency.setOnClickListener {
             //show emergency menu selections
-            layoutEmergencySelection.visibility = View.VISIBLE
+            if(layoutEmergencySelection.isVisible)
+                layoutEmergencySelection.visibility = View.INVISIBLE
+            else
+                layoutEmergencySelection.visibility = View.VISIBLE
         }
 
         //emergency menu click listener setting
