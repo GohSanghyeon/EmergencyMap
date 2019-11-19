@@ -1,7 +1,6 @@
 package com.example.emergencymap
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -12,8 +11,9 @@ import android.view.Menu
 import android.content.Intent
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.UiThread
-import androidx.core.view.isVisible
+import androidx.core.view.iterator
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -23,11 +23,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.toast
-
-
-
-
-
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -46,8 +41,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         setSupportActionBar(toolbar)
 
         val navHostFragment = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
+        // Passing each menu ID as a set of Ids because each
 
         appBarConfiguration = AppBarConfiguration(setOf(
             R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
@@ -59,9 +54,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             toast("현재 위치 조회")
         }
 
-        buttonEmergency.setOnClickListener {
-            layoutEmergencySelection.visibility = View.VISIBLE
-        }
+        setEmergencyButton()
     }
 
     private fun mountMap() {
@@ -78,8 +71,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         locationSource = FusedLocationSource(this, PERMISSIONCODE_Essential)
     }
 
+    private fun setEmergencyButton(){
+        buttonEmergency.setOnClickListener {
+            //show emergency menu selections
+            layoutEmergencySelection.visibility = View.VISIBLE
+        }
+
+        //emergency menu click listener setting
+        if(layoutEmergencySelection is ViewGroup)
+            for(menuItem in layoutEmergencySelection)
+                menuItem.setOnClickListener(EmergencyMenuClickListener(layoutEmergencySelection as ViewGroup))
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         return true
     }

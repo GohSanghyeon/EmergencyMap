@@ -40,6 +40,5 @@ class SelectionForEducation : AppCompatActivity() {
             intent.putExtra(HowToWithYoutube.ITEM_IS, HowToWithYoutube.WATERITEM)
             startActivity(intent)
         }
-
     }
 }
