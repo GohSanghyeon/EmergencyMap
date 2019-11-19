@@ -20,6 +20,7 @@ import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import org.jetbrains.anko.toast
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -38,10 +39,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mountMap()
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
         val navHostFragment = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -52,6 +49,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         setupActionBarWithNavController(navHostFragment, appBarConfiguration)
         nav_view.setupWithNavController(navHostFragment)
 
+        buttonNowLocation.setOnClickListener{
+            toast("현재 위치 조회")
+        }
+
+        buttonEmergency.setOnClickListener {
+            
+        }
     }
 
     private fun mountMap() {
@@ -103,6 +107,5 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         marker.width = 50
         marker.height = 80
         marker.icon = OverlayImage.fromResource(R.drawable.aed)
-
     }
 }
