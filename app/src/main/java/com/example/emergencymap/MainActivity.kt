@@ -1,5 +1,6 @@
 package com.example.emergencymap
 
+import android.Manifest
 import android.os.Bundle
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -15,32 +16,50 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
+import com.example.emergencymap.notshowing.LocationProvider
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
-import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.toast
 
+val permissionUsing: Array<out String> = arrayOf(
+    Manifest.permission.ACCESS_COARSE_LOCATION,
+    Manifest.permission.ACCESS_FINE_LOCATION,
+    Manifest.permission.SEND_SMS,
+    Manifest.permission.READ_EXTERNAL_STORAGE
+)
+    get() = field.clone()
+
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var locationSource: FusedLocationSource
+    private lateinit var locationSource: LocationProvider
     private var map: NaverMap? = null
+
+    companion object{
+        //for permission check
+        private const val STARTING = 10000
+        private const val MOVE_TO_NOW_LOCATION = 10001
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if(PermissionManager.isExist_deniedPermission(this, permissionForEssential))
-            PermissionManager.showRequest(this, permissionForEssential, PERMISSIONCODE_Essential,
-                "어플리케이션의 원활한 ", "위치 조회, SMS, 파일 읽기")
+        if(PermissionManager.existDeniedpermission(this, permissionUsing))
+            PermissionManager.showOnlyRequestAnd(this, permissionUsing, STARTING,
+                "어플리케이션의 기능을 정상적으로 사용하기 위해 " +
+                        "위치 조회, SMS, 파일 읽기권한이 필요합니다."){ _, _ ->
+                toast("일부 기능이 제한될 수 있습니다.")
+            }
 
         mountMap()
         setSupportActionBar(toolbar)
+        locationSource = LocationProvider(this)
 
         val navHostFragment = findNavController(R.id.nav_host_fragment)
         // menu should be considered as top level destinations.
@@ -53,7 +72,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         nav_view.setupWithNavController(navHostFragment)
 
         buttonNowLocation.setOnClickListener{
-            toast("현재 위치 조회")
+            setMapToNowLocation()
         }
 
         setEmergencyButton()
@@ -70,7 +89,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         mapFragment.getMapAsync(this)
-        locationSource = FusedLocationSource(this, PERMISSIONCODE_Essential)
+        locationSource = LocationProvider(this)
 
         val marker = Marker()
         marker.map
@@ -89,6 +108,25 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         if(layoutEmergencySelection is ViewGroup)
             for(menuItem in layoutEmergencySelection)
                 menuItem.setOnClickListener(EmergencyMenuClickListener(layoutEmergencySelection as ViewGroup))
+    }
+
+    override fun onRequestPermissionsResult(
+        functionCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when(functionCode){
+            STARTING -> {
+                if(PermissionManager.existDeniedpermission(this, permissions))
+                   toast("일부 기능이 제한될 수 있습니다.")
+            }
+            MOVE_TO_NOW_LOCATION -> {
+                if(!PermissionManager.existDeniedpermission(this, permissions))
+                    setMapToNowLocation()
+                else
+                    toast("권한이 허가되지 않아 기능을 이용할 수 없습니다.")
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -120,12 +158,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val heungup = LatLng(37.30260779, 127.9211684)
         marker.position = heungup
         naverMap.moveCamera(CameraUpdate.scrollTo(heungup))
-        naverMap.cameraPosition
         marker.map = naverMap
         marker.width = 50
         marker.height = 80
         marker.icon = OverlayImage.fromResource(R.drawable.aed)
 
         map = naverMap
+    }
+
+    private fun setMapToNowLocation(){
+        locationSource.requestNowLocation(MOVE_TO_NOW_LOCATION) {
+            it?.let{
+                map?.moveCamera(CameraUpdate.scrollTo(LatLng(it)))
+                toast("조회 완료")
+            }
+        }
     }
 }
