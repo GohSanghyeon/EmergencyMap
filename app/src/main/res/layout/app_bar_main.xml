@@ -12,12 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/include"
-            layout="@layout/content_main"
-            tools:layout_editor_absoluteX="67dp"
-            tools:layout_editor_absoluteY="-16dp" />
-
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
@@ -34,6 +28,16 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+        <fragment
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+            app:navGraph="@navigation/mobile_navigation" />
+
         <Button
             android:id="@+id/buttonEmergency"
             android:layout_width="wrap_content"
@@ -41,10 +45,11 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/rounded_square_emergency"
-            android:text="응급상황"
             android:padding="@dimen/button_general_padding"
+            android:text="응급상황"
             android:textColor="@android:color/white"
             android:textSize="16sp"
+            android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 
@@ -203,6 +208,46 @@
             </TableRow>
 
         </TableLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/rounded_square_whitecloud"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="맵 영역(테스트용)" />
+
+            <TextView
+                android:id="@+id/textTestEast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="맵 동단 :" />
+
+            <TextView
+                android:id="@+id/textTestWest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="맵 서단 :" />
+
+            <TextView
+                android:id="@+id/textTestSouth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="맵 남단 :" />
+
+            <TextView
+                android:id="@+id/textTestNorth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="맵 북단 :" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

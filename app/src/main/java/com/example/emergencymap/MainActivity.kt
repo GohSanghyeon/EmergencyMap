@@ -53,7 +53,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         if(PermissionManager.existDeniedpermission(this, permissionUsing))
             PermissionManager.showOnlyRequestAnd(this, permissionUsing, STARTING,
                 "어플리케이션의 기능을 정상적으로 사용하기 위해 " +
-                        "위치 조회, SMS, 파일 읽기권한이 필요합니다."){ _, _ ->
+                        "위치 조회, SMS, 파일 읽기권한이 필요합니다.")
+            { _, _ ->
                 toast("일부 기능이 제한될 수 있습니다.")
             }
 
@@ -66,8 +67,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         // Passing each menu ID as a set of Ids because each
 
         appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-            R.id.nav_tools, R.id.nav_share, R.id.nav_send), drawer_layout)
+            R.id.nav_home, R.id.nav_send, R.id.nav_share), drawer_layout)
         setupActionBarWithNavController(navHostFragment, appBarConfiguration)
         nav_view.setupWithNavController(navHostFragment)
 
@@ -164,6 +164,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         marker.icon = OverlayImage.fromResource(R.drawable.aed)
 
         map = naverMap
+
+        map?.uiSettings?.isCompassEnabled = false
+        map?.addOnCameraIdleListener {
+            map?.let { map ->
+                toast("위도 : ${map.cameraPosition.target.latitude}\n" +
+                        "경도 : ${map.cameraPosition.target.longitude}")
+
+                val coordinationBoundary = map.contentBounds
+                textTestEast.text = "맵 동단 : ${coordinationBoundary.eastLongitude}"
+                textTestWest.text = "맵 서단 : ${coordinationBoundary.westLongitude}"
+                textTestSouth.text = "맵 남단 : ${coordinationBoundary.southLatitude}"
+                textTestNorth.text = "맵 북단 : ${coordinationBoundary.northLatitude}"
+            }
+        }
     }
 
     private fun setMapToNowLocation(){

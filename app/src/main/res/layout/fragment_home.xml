@@ -23,6 +23,4 @@
         android:id="@+id/map_view"
         android:name="com.naver.maps.map.MapFragment" />
 
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
