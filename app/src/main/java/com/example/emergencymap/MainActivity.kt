@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         marker.position = heungup
         naverMap.moveCamera(CameraUpdate.scrollTo(heungup))
         marker.map = naverMap
-        marker.width = 50
+        marker.width = 60
         marker.height = 80
         marker.icon = OverlayImage.fromResource(R.drawable.aed)
 
