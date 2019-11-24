@@ -8,8 +8,8 @@ class EmergencyMenuClickListener(val groupSelection: ViewGroup) : View.OnClickLi
         groupSelection.visibility = View.INVISIBLE
 
         when(nowSelectionView?.id){
-            R.id.buttonEmergencySMS -> sendEmergencySMS()
-            R.id.buttonEmergencyManual -> buttonEmergencyManual()
+          //  R.id.buttonEmergencySMS -> sendEmergencySMS()
+          //  R.id.buttonEmergencyManual -> buttonEmergencyManual()
         }
     }
 

@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import com.example.emergencymap.notshowing.LocationProvider
@@ -22,8 +23,8 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.fragment_home.*
+//import kotlinx.android.synthetic.main.app_bar_main.*
+//import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.toast
 
 val permissionUsing: Array<out String> = arrayOf(
@@ -59,17 +60,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         mountMap()
-        setSupportActionBar(toolbar)
+        //setSupportActionBar(toolbar)
         locationSource = LocationProvider(this)
 
-        val navHostFragment = findNavController(R.id.nav_host_fragment)
+        //val navHostFragment = findNavController(R.id.nav_host_fragment)
         // menu should be considered as top level destinations.
         // Passing each menu ID as a set of Ids because each
 
-        appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.nav_home, R.id.nav_send, R.id.nav_share), drawer_layout)
-        setupActionBarWithNavController(navHostFragment, appBarConfiguration)
-        nav_view.setupWithNavController(navHostFragment)
+        //setupActionBarWithNavController(navHostFragment, appBarConfiguration)
 
         buttonNowLocation.setOnClickListener{
             setMapToNowLocation()
@@ -106,8 +104,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         //emergency menu click listener setting
         if(layoutEmergencySelection is ViewGroup)
-            for(menuItem in layoutEmergencySelection)
-                menuItem.setOnClickListener(EmergencyMenuClickListener(layoutEmergencySelection as ViewGroup))
+            for(menuItem in layoutEmergencySelection) menuItem.setOnClickListener(EmergencyMenuClickListener(layoutEmergencySelection as ViewGroup))
     }
 
     override fun onRequestPermissionsResult(
@@ -130,6 +127,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
@@ -147,10 +145,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
+   // override fun onSupportNavigateUp(): Boolean {
+        //val navController = findNavController(R.id.nav_host_fragment)
+       // return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+   // }
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
@@ -164,7 +162,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         marker.icon = OverlayImage.fromResource(R.drawable.aed)
 
         map = naverMap
-
         map?.uiSettings?.isCompassEnabled = false
         map?.addOnCameraIdleListener {
             map?.let { map ->
@@ -178,6 +175,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 textTestNorth.text = "맵 북단 : ${coordinationBoundary.northLatitude}"
             }
         }
+
+
     }
 
     private fun setMapToNowLocation(){
