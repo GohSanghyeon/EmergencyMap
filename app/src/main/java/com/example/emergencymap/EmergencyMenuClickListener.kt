@@ -27,13 +27,13 @@ class EmergencyMenuClickListener(val groupSelection: ViewGroup, val activity: Ap
 
         val inflater: LayoutInflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val builder = AlertDialog.Builder(activity)
-        val dialogView = inflater.inflate(R.layout.dialog, null)
+        val dialogView = inflater.inflate(R.layout.dialog_sms, null)
 
         (activity as MainActivity)?.let {
 
             //dialogBuilder.setView(dialogView);
 
-            val mainTv = dialogView.findViewById<EditText>(R.id.mainTv)
+            val mainTv = dialogView.findViewById<EditText>(R.id.editorSMSContents)
             mainTv.setText("심정지 환자가 발생했습니다.")
 
             //var mainTv = activity.findViewById<EditText>(R.id.mainTv);
