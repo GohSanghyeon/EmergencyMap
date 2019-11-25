@@ -180,7 +180,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         marker.width = 60
         marker.height = 80
         marker.icon = OverlayImage.fromResource(R.drawable.aed)
-
+    //
         map = naverMap
         map?.uiSettings?.isCompassEnabled = false
         map?.addOnCameraIdleListener {
@@ -211,6 +211,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                             //val y = obj.getDouble("y")
                             Log.d("line x=", "$x\n")
                             //Log.d("line y=", "$y\n")
+                            //
                         }
                     }
                 }catch (e: Exception){
