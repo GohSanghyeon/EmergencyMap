@@ -24,7 +24,7 @@ class LocationList : AppCompatActivity() {
         var wgs84Long:String? = null
         try
         {
-            val urlstr = "http://apis.data.go.kr/B552657/AEDInfoInqireService/getAedFullDown?&pageNo=1&numOfRows=10&ServiceKey=" + "Rw5fnd4aIV%2FYmq31RakSWT7yW4UKspC%2FBEMy%2Bro8DUsn3%2Fw4qTA8kXBOXBlvnBGUhx1MiIcUm%2BIdOYB0iPQk%2BA%3D%3D"
+            val urlstr = "http://apis.data.go.kr/B552657/AEDInfoInqireService/getAedFullDown?&pageNo=1&numOfRows=1000&ServiceKey=" + "Rw5fnd4aIV%2FYmq31RakSWT7yW4UKspC%2FBEMy%2Bro8DUsn3%2Fw4qTA8kXBOXBlvnBGUhx1MiIcUm%2BIdOYB0iPQk%2BA%3D%3D"
             val url = URL(urlstr)
             val parserCreator = XmlPullParserFactory.newInstance()
             val parser = parserCreator.newPullParser()
@@ -72,7 +72,7 @@ class LocationList : AppCompatActivity() {
                     }
                     XmlPullParser.END_TAG -> if (parser.getName().equals("item"))
                     {
-                        result.text = "\n 주소 : " + buildAddress + "\n 위도 : " + wgs84Lat + "\n 경도 : " + wgs84Long + "\t" // 이 부분 고침
+                        result.text = "${result.text}\n 주소 : " + buildAddress  + "\n 위도 : " + wgs84Lat + "\n 경도 : " + wgs84Long + "\n"
                         initem = false
                     }
                 }
@@ -82,8 +82,5 @@ class LocationList : AppCompatActivity() {
         catch (e:Exception) {
             result.setText("에러")
         }
-
-
-
     }
 }

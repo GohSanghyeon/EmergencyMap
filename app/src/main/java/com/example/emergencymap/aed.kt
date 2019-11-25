@@ -8,6 +8,5 @@ val key:String = "HlLRX5S1nU7Vm97SIqyTNHY06kZcVlmhLT%2BERn35RgDMRD27e0xhhaaphKJ5
     public fun getXmlData(){
         var buffer:StringBuffer = StringBuffer()
         //val location:String = URLEncoder.encode(str)
-
         var queryUrl = "http://apis.data.go.kr/B552657/AEDInfoInqireService"+"addr="
     }
