@@ -1,50 +1,34 @@
 package com.example.emergencymap
 
 import android.Manifest
-import android.content.ContentValues
 import android.os.Bundle
-import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.content.Intent
-import android.os.AsyncTask
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import com.example.emergencymap.notshowing.LocationProvider
-import com.google.android.youtube.player.internal.s
-import com.google.android.youtube.player.internal.u
-import com.google.android.youtube.player.internal.x
-import com.google.android.youtube.player.internal.y
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
-import kotlinx.android.synthetic.main.activity_location_list.*
 import kotlinx.android.synthetic.main.activity_main.*
 //import kotlinx.android.synthetic.main.app_bar_main.*
 //import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.toast
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedReader
-import java.io.InputStream
 import java.io.InputStreamReader
-import java.io.Reader
 import java.lang.Exception
-import java.lang.StringBuilder
-import java.net.HttpURLConnection
 import java.net.URL
-import java.net.URLConnection
 
 val permissionUsing: Array<out String> = arrayOf(
     Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -54,17 +38,22 @@ val permissionUsing: Array<out String> = arrayOf(
 )
     get() = field.clone()
 
+typealias ItemsInfo = JSONArray?
+
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var locationSource: LocationProvider
     private var map: NaverMap? = null
-    lateinit var url : URL
-    var data : String? = null
+    private var itemsOnMap: ItemsInfo = null
 
     companion object{
         //for permission check
         private const val STARTING = 10000
         private const val MOVE_TO_NOW_LOCATION = 10001
+
+        private var markerWidth = 60
+        private var markerHeight = 80
+        private var limitDistance = 0.1        //Coordinate Compensation Value
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,6 +73,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         buttonNowLocation.setOnClickListener{
             setMapToNowLocation()
+        }
+
+        buttonLocationAED.setOnCheckedChangeListener { compoundButton, isOn ->
+            if(isOn) {
+                compoundButton.background = getDrawable(R.color.colorRedCloud)
+            }
+            else {
+                compoundButton.background = getDrawable(R.color.transparency)
+            }
         }
 
         setEmergencyButton()
@@ -166,55 +164,45 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         marker.position = heungup
         naverMap.moveCamera(CameraUpdate.scrollTo(heungup))
         marker.map = naverMap
-        marker.width = 60
-        marker.height = 80
+        marker.width = markerWidth
+        marker.height = markerHeight
         marker.icon = OverlayImage.fromResource(R.drawable.aed)
     //
         map = naverMap
         map?.uiSettings?.isCompassEnabled = false
         map?.addOnCameraIdleListener {
             map?.let { map ->
-                toast("위도 : ${map.cameraPosition.target.latitude}\n" +
-                        "경도 : ${map.cameraPosition.target.longitude}")
+                val nowLatitude = map.cameraPosition.target.latitude
+                val nowLongitude = map.cameraPosition.target.longitude
 
                 val coordinationBoundary = map.contentBounds
+                val mapEast = coordinationBoundary.eastLongitude
+                val mapWest = coordinationBoundary.westLongitude
+                val mapSouth = coordinationBoundary.southLatitude
+                val mapNorth = coordinationBoundary.northLatitude
+
                 textTestEast.text = "맵 동단 : ${coordinationBoundary.eastLongitude}"
                 textTestWest.text = "맵 서단 : ${coordinationBoundary.westLongitude}"
                 textTestSouth.text = "맵 남단 : ${coordinationBoundary.southLatitude}"
                 textTestNorth.text = "맵 북단 : ${coordinationBoundary.northLatitude}"
-                var surl : String= "http://15.164.116.17/xy.php?east=${coordinationBoundary.eastLongitude}" +
-                            "&west=${coordinationBoundary.westLongitude}&south=${coordinationBoundary.southLatitude}&" +
-                            "north=${coordinationBoundary.northLatitude}"
-                url = URL(surl)
 
-                Log.d("line", url.toString())
-                val networkTask = NetworkTask(surl, null)
-                networkTask.execute()
-                try {
-                    if (data != null) {
-                        val jObject = JSONObject(data)
-                        val jArray = jObject.getJSONArray("123")
-                        for (i in 0 until jArray.length()) {
-                            val obj = jArray.getJSONObject(i)
-                            val x = obj.getDouble("x")
-                            //val y = obj.getDouble("y")
-                            Log.d("line x=", "$x\n")
-                            //Log.d("line y=", "$y\n")
-                            //
-                        }
+                val requestBoundary = Boundary(
+                    if((mapEast - nowLongitude) <= limitDistance) mapEast else nowLongitude + limitDistance
+                    , if((nowLongitude - mapWest) <= limitDistance) mapWest else nowLongitude - limitDistance
+                    , if((nowLatitude - mapSouth) <= limitDistance) mapSouth else nowLatitude - limitDistance
+                    , if((mapNorth - nowLatitude) <= limitDistance) mapNorth else nowLatitude + limitDistance
+                )
+
+                val taskDownload = ItemsDownloader(requestBoundary, this) {items ->
+                    items?.let {
+                        itemsOnMap = it
+                        putMarkers(it, map)
                     }
-                }catch (e: Exception){
-                    e.printStackTrace()
                 }
+
+                taskDownload.execute()
             }
         }
-    }
-    fun readStream(inputStream: InputStreamReader): String {
-        val bufferedReader = BufferedReader(inputStream)
-        val stringBuffer = StringBuffer("")
-        bufferedReader.forEachLine { stringBuffer.append(it) }
-        Log.d("dusxo", stringBuffer.toString())
-        return stringBuffer.toString().replaceFirst("\uFEFF\uFEFF", "")
     }
 
     private fun setMapToNowLocation(){
@@ -225,23 +213,31 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
-    inner class NetworkTask(private val url: String, private val values: ContentValues?) :
-        AsyncTask<Void, Void, String>() {
 
-        override fun doInBackground(vararg params: Void): String? {
+    private fun putMarkers(items: JSONArray, drawingMap: NaverMap){
+        for(nowOrder in 0 until items.length()) {
+            val nowItem = items[nowOrder] as JSONObject?;
 
-            val result: String? // 요청 결과를 저장할 변수.
-            val requestHttpURLConnection = RequestHttpURLConnection()
-            result = requestHttpURLConnection.request(url, values) // 해당 URL로 부터 결과물을 얻어온다.
+            nowItem?.let{
+                val latitude: Double
+                val longitude: Double
 
-            return result
-        }
+                try {
+                    latitude = it.getDouble(getString(R.string.Latitude))
+                    longitude = it.getDouble(getString(R.string.Longitude))
+                }catch(e: JSONException){
+                    Log.d("putting Marker : ", "잘못된 위도-경도")
+                    return@let
+                }
 
-        override fun onPostExecute(s: String){
-            super.onPostExecute(s)
-            //doInBackground()로 부터 리턴된 값이 onPostExecute()의 매개변수로 넘어오므로 s를 출력한다.
-            Log.d("line", "$s\n")
-            data = s
+                val newMarker = Marker().apply{
+                    position = LatLng(latitude, longitude)
+                    map = drawingMap
+                    width = markerWidth
+                    height = markerHeight
+                    icon = OverlayImage.fromResource(R.drawable.aed)
+                }
+            }
         }
     }
 }

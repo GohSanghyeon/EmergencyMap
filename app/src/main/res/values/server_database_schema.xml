@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ItemNo">ItemNo</string>
+    <string name="Distinction">Distinction</string>
+    <string name="BuildAddress">BuildAddress</string>
+    <string name="Latitude">Latitude</string>
+    <string name="Longitude">Longitude</string>
+    <string name="DetailedPlace">DetailedPlace</string>
+    <string name="ManagerTel">ManagerTel</string>
+</resources>
