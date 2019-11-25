@@ -104,7 +104,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         //emergency menu click listener setting
         if(layoutEmergencySelection is ViewGroup)
-            for(menuItem in layoutEmergencySelection) menuItem.setOnClickListener(EmergencyMenuClickListener(layoutEmergencySelection as ViewGroup))
+            for(menuItem in layoutEmergencySelection)
+                menuItem.setOnClickListener(EmergencyMenuClickListener(layoutEmergencySelection as ViewGroup, this))
     }
 
     override fun onRequestPermissionsResult(
