@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
 
     <TextView
         android:id="@+id/textDialogueTitle"
@@ -9,19 +11,24 @@
         android:layout_height="43dp"
         android:gravity="center"
         android:text="비상 신고"
-        android:textSize="25sp"
-        android:textColor="#FF0000"/>
+        android:textColor="#FF0000"
+        android:textSize="25sp" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/selectionPatientStatus"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="end" />
 
     <EditText
         android:id="@+id/editorSMSContents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:gravity="top"
+        android:inputType="textLongMessage|textMultiLine|textPersonName|textEmailAddress"
+        android:lines="6"
+        android:maxLines="10"
         android:text="Name" />
+
 </LinearLayout>
