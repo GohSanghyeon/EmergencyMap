@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var map: NaverMap? = null
     lateinit var url : URL
     var data : String? = null
+
     companion object{
         //for permission check
         private const val STARTING = 10000
@@ -79,14 +80,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         mountMap()
-        //setSupportActionBar(toolbar)
         locationSource = LocationProvider(this)
-
-        //val navHostFragment = findNavController(R.id.nav_host_fragment)
-        // menu should be considered as top level destinations.
-        // Passing each menu ID as a set of Ids because each
-
-        //setupActionBarWithNavController(navHostFragment, appBarConfiguration)
 
         buttonNowLocation.setOnClickListener{
             setMapToNowLocation()
@@ -165,11 +159,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         return super.onOptionsItemSelected(item)
     }
 
-   // override fun onSupportNavigateUp(): Boolean {
-        //val navController = findNavController(R.id.nav_host_fragment)
-       // return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-   // }
-
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
         val marker = Marker()
@@ -193,7 +182,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 textTestWest.text = "맵 서단 : ${coordinationBoundary.westLongitude}"
                 textTestSouth.text = "맵 남단 : ${coordinationBoundary.southLatitude}"
                 textTestNorth.text = "맵 북단 : ${coordinationBoundary.northLatitude}"
-                 var surl : String= "http://15.164.116.17/xy.php?east=${coordinationBoundary.eastLongitude}" +
+                var surl : String= "http://15.164.116.17/xy.php?east=${coordinationBoundary.eastLongitude}" +
                             "&west=${coordinationBoundary.westLongitude}&south=${coordinationBoundary.southLatitude}&" +
                             "north=${coordinationBoundary.northLatitude}"
                 url = URL(surl)
