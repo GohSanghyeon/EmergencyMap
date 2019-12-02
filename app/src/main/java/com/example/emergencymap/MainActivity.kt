@@ -19,6 +19,7 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.dialog_emergencyeducation.*
 //import kotlinx.android.synthetic.main.app_bar_main.*
 //import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.toast
