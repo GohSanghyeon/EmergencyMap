@@ -10,4 +10,5 @@
     <color name="colorWhiteCloud">#88FFFFFF</color>
     <color name="colorRedCloud">#44FF8888</color>
     <color name="transparency">#00000000</color>
+    <color name="transparencyBlack">#AA000000</color>
 </resources>
