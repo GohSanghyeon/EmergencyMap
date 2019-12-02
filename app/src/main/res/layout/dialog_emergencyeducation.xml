@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/textDialogueTitle"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:gravity="center"
+        android:text="응급 교육"
+        android:textColor="#FF0000"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/buttonAED"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_square_whiteselction"
+        android:text="AED (자동제세동기)" />
+
+    <Button
+        android:id="@+id/buttonMASK"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_square_whiteselction"
+        android:text="방독면 사용법" />
+
+    <Button
+        android:id="@+id/buttonFIRE"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_square_whiteselction"
+        android:text="소화전 사용법" />
+
+    <Button
+        android:id="@+id/buttonWATER"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_square_whiteselction"
+        android:text="해상 구조 용품" />
+
+</LinearLayout>
