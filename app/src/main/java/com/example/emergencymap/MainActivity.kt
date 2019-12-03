@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var locationSource: LocationProvider
     private var map: NaverMap? = null
-    private var itemsOnMap: ItemsInfo = null
+    private var itemsOnMap: MutableList<ItemInfo> = mutableListOf()
 
     companion object{
         //for permission check
@@ -193,10 +193,41 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     , if((mapNorth - nowLatitude) <= limitDistance) mapNorth else nowLatitude + limitDistance
                 )
 
-                val taskDownload = ItemsDownloader(requestBoundary, this) {items ->
-                    items?.let {
-                        itemsOnMap = it
-                        putMarkers(it, map)
+                val taskDownload = ItemsDownloader(requestBoundary, this) { items ->
+                    items?.let { itemArray ->
+                        for (itemPosition in 0 until itemArray.length()) {
+                            (itemArray[itemPosition] as? JSONObject)?.let checkNewItem@ { nowItem ->
+                                var nowItemLatitude: Double
+                                var nowItemLongitude: Double
+                                var nowItemDistinction: Int
+                                var nowItemLatLng: LatLng
+
+                                try{
+                                    nowItemLatitude = nowItem.getDouble(getString(R.string.Latitude))
+                                    nowItemLongitude = nowItem.getDouble(getString(R.string.Longitude))
+                                    nowItemDistinction = nowItem.getInt(getString(R.string.Distinction))
+                                    nowItemLatLng = LatLng(nowItemLatitude, nowItemLongitude)
+                                }catch(e: JSONException){
+                                    Log.d("Item Check", "잘못된 JSON형식!", e)
+                                    return@checkNewItem
+                                }
+
+                                val isNewItem = itemsOnMap.count { oneItemOnMap ->
+                                    oneItemOnMap.itemLatLng == nowItemLatLng
+                                            && oneItemOnMap.itemDistinction == nowItemDistinction
+                                } == 0
+
+                                if(isNewItem){
+                                    itemsOnMap.add(ItemInfo(
+                                        nowItemLatitude
+                                        , nowItemLongitude
+                                        , nowItemDistinction
+                                        , nowItem))
+
+                                    putMarker(nowItem, nowItemLatLng, nowItemDistinction, map)
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -240,4 +271,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
+
+    private fun putMarker(
+        item: JSONObject
+        , itemLatLng: LatLng
+        , itemDistinction: Int
+        , drawingMap: NaverMap) = Marker().apply{
+            position = itemLatLng
+            map = drawingMap
+            width = markerWidth
+            height = markerHeight
+            icon = OverlayImage.fromResource(R.drawable.aed)
+        }
 }
