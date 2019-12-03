@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
-import kotlinx.android.synthetic.main.dialog_emergencyeducation.*
 import kotlinx.android.synthetic.main.dialog_sms.view.*
 
 
@@ -85,11 +84,12 @@ class EmergencyMenuClickListener(
 
         val buttonAED = dialogView.findViewById<Button>(R.id.buttonAED)
         val buttonMASK = dialogView.findViewById<Button>(R.id.buttonMASK)
-        val buttonFIRE = dialogView.findViewById<Button>(R.id.buttonFIRE)
+        val buttonFIRE1 = dialogView.findViewById<Button>(R.id.buttonFIRE1)
+        val buttonFIRE2 = dialogView.findViewById<Button>(R.id.buttonFIRE2)
         val buttonWATER = dialogView.findViewById<Button>(R.id.buttonWATER)
 
         buttonAED.setOnClickListener {
-            val intent = Intent(activity, education_list::class.java)
+            val intent = Intent(activity, education_list_aed::class.java)
             startActivity(activity, intent, null)
         }
 
@@ -97,7 +97,12 @@ class EmergencyMenuClickListener(
 
         }
 
-        buttonFIRE.setOnClickListener {
+        buttonFIRE1.setOnClickListener {
+            val intent = Intent(activity, education_list_fire1::class.java)
+            startActivity(activity, intent, null)
+        }
+
+        buttonFIRE2.setOnClickListener {
 
         }
 

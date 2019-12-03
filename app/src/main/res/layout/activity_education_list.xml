@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".education_list">
+    tools:context=".education_list_aed">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/pageview"

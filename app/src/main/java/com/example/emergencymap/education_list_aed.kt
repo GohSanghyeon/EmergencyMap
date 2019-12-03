@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget
 import kotlinx.android.synthetic.main.activity_education_list.*
 
-class education_list : AppCompatActivity() {
+class education_list_aed : AppCompatActivity() {
 
     var viewList : ArrayList<View> = ArrayList<View>()
 
@@ -24,7 +24,7 @@ class education_list : AppCompatActivity() {
         Glide.with(this).load(R.drawable.aed1).into(gifImage1)*/
 
         for(nowPosition in 0 .. 2){
-            val nowView = layoutInflater.inflate(R.layout.education_1, null)
+            val nowView = layoutInflater.inflate(R.layout.education_aed, null)
 
             val rabbit1 = nowView.findViewById(R.id.aed1_view) as ImageView
             val gifImage1 = GlideDrawableImageViewTarget(rabbit1)
