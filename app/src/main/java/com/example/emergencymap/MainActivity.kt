@@ -6,6 +6,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.content.Intent
+import android.content.SharedPreferences
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -64,6 +65,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 toast("일부 기능이 제한될 수 있습니다.")
             }
 
+        checkShowingTutorial()
+
         mountMap()
         locationSource = LocationProvider(this)
 
@@ -83,6 +86,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         setEmergencyButton()
     }
 
+    private fun checkShowingTutorial() {
+        val pref
+                = getSharedPreferences(TutorialActivity.PREFERENCES_TUTORIAL_NAME, MODE_PRIVATE)
+
+        val isCheckedNeverShow
+                = pref.getInt("First", TutorialActivity.UNCHECKED_NEVER_SHOW_TUTORIAL)
+
+        if(isCheckedNeverShow == TutorialActivity.UNCHECKED_NEVER_SHOW_TUTORIAL){
+            val intent = Intent(this, TutorialActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
     private fun mountMap() {
         //네이버 맵 클라이언트 ID 받아오기
         NaverMapSdk.getInstance(this).client = NaverMapSdk.NaverCloudPlatformClient("af5bvg9isp")
@@ -95,75 +111,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapFragment.getMapAsync(this)
         locationSource = LocationProvider(this)
-
-        val marker = Marker()
-        marker.map
-    }
-
-    private fun setEmergencyButton(){
-        buttonEmergency.setOnClickListener {
-            //show emergency menu selections
-            if(layoutEmergencySelection.isVisible)
-                layoutEmergencySelection.visibility = View.INVISIBLE
-            else
-                layoutEmergencySelection.visibility = View.VISIBLE
-        }
-
-        //emergency menu click listener setting
-        if(layoutEmergencySelection is ViewGroup)
-            for(menuItem in layoutEmergencySelection)
-                menuItem.setOnClickListener(EmergencyMenuClickListener(layoutEmergencySelection as ViewGroup, this))
-    }
-
-    override fun onRequestPermissionsResult(
-        functionCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        when(functionCode){
-            STARTING -> {
-                if(PermissionManager.existDeniedpermission(this, permissions))
-                   toast("일부 기능이 제한될 수 있습니다.")
-            }
-            MOVE_TO_NOW_LOCATION -> {
-                if(!PermissionManager.existDeniedpermission(this, permissions))
-                    setMapToNowLocation()
-                else
-                    toast("권한이 허가되지 않아 기능을 이용할 수 없습니다.")
-            }
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-
-            R.id.apptuto ->{
-
-            }
-            R.id.howtool ->
-                startActivity(Intent(this, SelectionForEducation::class.java))
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
-        val marker = Marker()
         val heungup = LatLng(37.30260779, 127.9211684)
-        marker.position = heungup
         naverMap.moveCamera(CameraUpdate.scrollTo(heungup))
-        marker.map = naverMap
-        marker.width = markerWidth
-        marker.height = markerHeight
-        marker.icon = OverlayImage.fromResource(R.drawable.aed_marker)
-    //
+
         map = naverMap
         map?.uiSettings?.isCompassEnabled = false
         map?.addOnCameraIdleListener {
@@ -230,6 +184,58 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 taskDownload.execute()
             }
         }
+    }
+
+    private fun setEmergencyButton(){
+        buttonEmergency.setOnClickListener {
+            //show emergency menu selections
+            if(layoutEmergencySelection.isVisible)
+                layoutEmergencySelection.visibility = View.INVISIBLE
+            else
+                layoutEmergencySelection.visibility = View.VISIBLE
+        }
+
+        //emergency menu click listener setting
+        if(layoutEmergencySelection is ViewGroup)
+            for(menuItem in layoutEmergencySelection)
+                menuItem.setOnClickListener(EmergencyMenuClickListener(layoutEmergencySelection as ViewGroup, this))
+    }
+
+    override fun onRequestPermissionsResult(
+        functionCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when(functionCode){
+            STARTING -> {
+                if(PermissionManager.existDeniedpermission(this, permissions))
+                   toast("일부 기능이 제한될 수 있습니다.")
+            }
+            MOVE_TO_NOW_LOCATION -> {
+                if(!PermissionManager.existDeniedpermission(this, permissions))
+                    setMapToNowLocation()
+                else
+                    toast("권한이 허가되지 않아 기능을 이용할 수 없습니다.")
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+
+            R.id.apptuto ->{
+                startActivity(Intent(this, TutorialActivity::class.java))
+            }
+            R.id.howtool ->
+                startActivity(Intent(this, SelectionForEducation::class.java))
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setMapToNowLocation(){

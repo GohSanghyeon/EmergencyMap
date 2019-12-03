@@ -13,4 +13,9 @@
     <string name="menu_tools">기능3</string>
     <string name="menu_share">기능4</string>
     <string name="menu_send">라이센스</string>
+
+    <string name="tutorial_introduction">
+        궁금한 위젯을 클릭하여\n
+        어떤 기능을 제공해주는지 알아보세요.
+    </string>
 </resources>

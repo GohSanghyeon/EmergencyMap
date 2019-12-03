@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/tutorial_static_map"
+    tools:context=".TutorialActivity">
+
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorWhiteCloud"
+        android:padding="5dp"
+        android:text="다시 보지않기"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/closeView"
+        app:layout_constraintTop_toBottomOf="@+id/tipView" />
+
+    <TextView
+        android:id="@+id/closeView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhiteCloud"
+        android:padding="5dp"
+        android:text=" 닫기"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/tipView"
+        app:layout_constraintTop_toTopOf="@+id/checkbox" />
+
+    <Button
+        android:id="@+id/buttonEmergency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_square_emergency"
+        android:padding="@dimen/button_general_padding"
+        android:text="응급상황"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/layoutEmergencySelection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/rounded_square_whiteframe"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toEndOf="@+id/buttonEmergency"
+        app:layout_constraintTop_toTopOf="@+id/buttonEmergency">
+
+
+        <Button
+            android:id="@+id/buttonEmergencySMS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:text="비상신고"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/buttonEmergencyManual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:text="응급교육"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/rounded_square_general"
+        android:padding="@dimen/button_general_padding"
+        android:text="리스트"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/buttonSaveFromMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/rounded_square_general"
+        android:padding="@dimen/button_general_padding"
+        android:text="화면 내 구조용품 위치 저장"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toStartOf="@+id/buttonList"
+        app:layout_constraintTop_toTopOf="@+id/buttonList" />
+
+
+    <Button
+        android:id="@+id/buttonNowLocation"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/transparency"
+        android:foreground="@drawable/ic_gps_fixed_black_24dp"
+        android:foregroundTint="@android:color/black"
+        android:padding="@dimen/button_general_padding"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonSaveFromMap"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/rounded_square_whitecloud"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSaveFromMap"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/button_general_padding">
+
+            <View
+                android:id="@+id/divider0"
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/black" />
+
+            <ToggleButton
+                android:id="@+id/buttonLocationAED"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparency"
+                android:padding="@dimen/button_general_padding"
+                android:textOff="AED"
+                android:textOn="AED" />
+
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/black" />
+
+            <ToggleButton
+                android:id="@+id/buttonLocationGasMask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparency"
+                android:textOff="방독면"
+                android:textOn="방독면" />
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/black" />
+
+            <ToggleButton
+                android:id="@+id/buttonLocationFireplug"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparency"
+                android:text="ToggleButton"
+                android:textOff="소화전"
+                android:textOn="소화전" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/black" />
+
+            <ToggleButton
+                android:id="@+id/buttonLocationWaterEquip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparency"
+                android:textOff="해상구조용품"
+                android:textOn="해상구조용품"
+                android:textSize="11sp" />
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/black" />
+        </TableRow>
+
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/tipView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="170dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginBottom="120dp"
+        android:background="@color/transparencyBlack"
+        android:padding="8dp"
+        android:text="@string/tutorial_introduction"
+        android:textColor="#FFC107"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
