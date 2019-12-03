@@ -18,9 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".education_list"></activity>
-        <activity android:name=".EmergencyEducation" />
-        <activity android:name=".LocationList" />
+        <activity android:name=".EmergencyEducationList"></activity>
         <activity
             android:name=".HowToWithYoutube"
             android:parentActivityName=".SelectionForEducation" />

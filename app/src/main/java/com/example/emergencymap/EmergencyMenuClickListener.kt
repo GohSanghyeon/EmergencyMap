@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
-import kotlinx.android.synthetic.main.dialog_emergencyeducation.*
 import kotlinx.android.synthetic.main.dialog_sms.view.*
 
 
@@ -89,7 +88,7 @@ class EmergencyMenuClickListener(
         val buttonWATER = dialogView.findViewById<Button>(R.id.buttonWATER)
 
         buttonAED.setOnClickListener {
-            val intent = Intent(activity, education_list::class.java)
+            val intent = Intent(activity, EmergencyEducationList::class.java)
             startActivity(activity, intent, null)
         }
 

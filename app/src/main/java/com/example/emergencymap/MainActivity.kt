@@ -19,17 +19,12 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_emergencyeducation.*
 //import kotlinx.android.synthetic.main.app_bar_main.*
 //import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.toast
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.lang.Exception
-import java.net.URL
 
 val permissionUsing: Array<out String> = arrayOf(
     Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -52,8 +47,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         private const val STARTING = 10000
         private const val MOVE_TO_NOW_LOCATION = 10001
 
-        private var markerWidth = 60
-        private var markerHeight = 80
+        private var markerWidth = 90
+        private var markerHeight = 120
         private var limitDistance = 0.1        //Coordinate Compensation Value
     }
 
@@ -167,7 +162,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         marker.map = naverMap
         marker.width = markerWidth
         marker.height = markerHeight
-        marker.icon = OverlayImage.fromResource(R.drawable.aed)
+        marker.icon = OverlayImage.fromResource(R.drawable.aed_marker)
     //
         map = naverMap
         map?.uiSettings?.isCompassEnabled = false
@@ -267,7 +262,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     map = drawingMap
                     width = markerWidth
                     height = markerHeight
-                    icon = OverlayImage.fromResource(R.drawable.aed)
+                    icon = OverlayImage.fromResource(R.drawable.aed_marker)
                 }
             }
         }
@@ -282,6 +277,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             map = drawingMap
             width = markerWidth
             height = markerHeight
-            icon = OverlayImage.fromResource(R.drawable.aed)
+            icon = when(itemDistinction){
+                resources.getInteger(R.integer.AED)
+                -> OverlayImage.fromResource(R.drawable.aed_marker)
+                resources.getInteger(R.integer.TsunamiShelter)
+                -> OverlayImage.fromResource(R.drawable.tsunami_shelter_marker)
+                else
+                -> OverlayImage.fromResource(R.drawable.question_marker)
+            }
         }
 }

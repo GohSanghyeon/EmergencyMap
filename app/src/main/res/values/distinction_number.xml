@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="AED">100</integer>
+    <integer name="TsunamiShelter">200</integer>
+    <integer name="MBWShelter">210</integer>    //민방위
+</resources>
