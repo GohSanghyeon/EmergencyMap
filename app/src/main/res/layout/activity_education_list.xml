@@ -7,7 +7,7 @@
     tools:context=".EmergencyEducationList">
 
     <androidx.viewpager.widget.ViewPager
-        android:id="@+id/pageview"
+        android:id="@+id/pagerEducation"
         android:layout_width="409dp"
         android:layout_height="729dp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -29,7 +29,14 @@
         android:text="방독면 사용법" />
 
     <Button
-        android:id="@+id/buttonFIRE"
+        android:id="@+id/buttonFIRE1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_square_whiteselction"
+        android:text="소화기 사용법" />
+
+    <Button
+        android:id="@+id/buttonFIRE2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_square_whiteselction"

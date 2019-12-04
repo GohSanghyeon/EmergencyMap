@@ -6,60 +6,33 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget
 import kotlinx.android.synthetic.main.activity_education_list.*
 
 class EmergencyEducationList : AppCompatActivity() {
 
-    var viewList : ArrayList<View> = ArrayList<View>()
+    private var viewList : ArrayList<View> = ArrayList<View>()
+    private val imagesAED = listOf(R.raw.aed1, R.raw.aed2, R.raw.aed2)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_education_list)
 
-        for(nowPosition in 0 .. 2){
+        imagesAED.forEach {idRawImage ->
             val nowView = layoutInflater.inflate(R.layout.activity_short_education, null)
+            val imgView = nowView.findViewById<ImageView>(R.id.viewEducationImage)
+            val canvas = GlideDrawableImageViewTarget(imgView)
 
-            val rabbit1 = nowView.findViewById(R.id.aed1_view) as ImageView
-            val gifImage1 = GlideDrawableImageViewTarget(rabbit1)
-            when(nowPosition){
-                0 -> {
-                    Glide.with(applicationContext).load(R.raw.aed1).into(gifImage1)
-                }
-                1 -> {
-                    Glide.with(applicationContext).load(R.raw.aed2).into(gifImage1)
-                }
-                2 -> {
-                    Glide.with(applicationContext).load(R.raw.aed3).into(gifImage1)
-                }
-            }
-
+            Glide.with(applicationContext).load(idRawImage).into(canvas)
             viewList.add(nowView)
         }
 
-        pageview.adapter = pagerAdapter()
-        pageview.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
-            override fun onPageScrollStateChanged(state: Int) {
-            }
-
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-            }
-
-            override fun onPageSelected(position: Int) {
-
-            }
-
-        })
-
+        pagerEducation.adapter = PagerEducationAdapter()
     }
 
-    inner class pagerAdapter : PagerAdapter() {
+    inner class PagerEducationAdapter : PagerAdapter() {
         override fun isViewFromObject(view: View, obj: Any): Boolean {
             return view == obj
         }
@@ -76,7 +49,7 @@ class EmergencyEducationList : AppCompatActivity() {
         }
 
         override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
-            pageview.removeView(obj as View)
+            pagerEducation.removeView(obj as View)
         }
     }
 }
