@@ -9,14 +9,14 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-        <fragment android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/map_view"
-            android:name="com.naver.maps.map.MapFragment" />
+    <fragment android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/map_view"
+        android:name="com.naver.maps.map.MapFragment" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
-       android:layout_width="match_parent"
+        android:layout_width="match_parent"
         android:visibility="invisible"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
@@ -156,13 +156,13 @@
                 android:background="@android:color/black" />
 
             <ToggleButton
-                android:id="@+id/buttonLocationGasMask"
+                android:id="@+id/buttonTsunamiShelter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/transparency"
-                android:textOff="방독면"
-                android:textOn="방독면" />
+                android:textOff="대피소"
+                android:textOn="대피소" />
 
             <View
                 android:id="@+id/divider2"
@@ -246,4 +246,3 @@
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

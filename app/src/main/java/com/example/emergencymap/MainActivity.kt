@@ -15,10 +15,13 @@ import androidx.annotation.UiThread
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import com.example.emergencymap.notshowing.LocationProvider
+import com.google.android.youtube.player.internal.i
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.util.MarkerIcons
 import kotlinx.android.synthetic.main.activity_main.*
 //import kotlinx.android.synthetic.main.app_bar_main.*
 //import kotlinx.android.synthetic.main.fragment_home.*
@@ -48,8 +51,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         private const val STARTING = 10000
         private const val MOVE_TO_NOW_LOCATION = 10001
 
-        private var markerWidth = 90
-        private var markerHeight = 120
+        private var markerWidth = 80
+        private var markerHeight = 100
         private var limitDistance = 0.1        //Coordinate Compensation Value
     }
 
@@ -74,16 +77,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             setMapToNowLocation()
         }
 
-        buttonLocationAED.setOnCheckedChangeListener { compoundButton, isOn ->
-            if(isOn) {
-                compoundButton.background = getDrawable(R.color.colorRedCloud)
-            }
-            else {
-                compoundButton.background = getDrawable(R.color.transparency)
-            }
-        }
-
+        hideAED()
+        hideShelter()
         setEmergencyButton()
+
     }
 
     private fun checkShowingTutorial() {
@@ -172,10 +169,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                         nowItemLatitude
                                         , nowItemLongitude
                                         , nowItemDistinction
-                                        , nowItem))
-
-                                    putMarker(nowItem, nowItemLatLng, nowItemDistinction, map)
+                                        , nowItem
+                                        , putMarker(nowItem, nowItemLatLng, nowItemDistinction, map)))
                                 }
+
                             }
                         }
                     }
@@ -183,6 +180,52 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 taskDownload.execute()
             }
+        }
+
+    }
+
+    private fun hideAED(){
+
+        buttonLocationAED.setOnCheckedChangeListener { compoundButton, isOn ->
+            if(isOn) {
+                compoundButton.background = getDrawable(R.color.colorRedCloud)
+                itemsOnMap.filter {
+                    it.itemDistinction == 100
+                }.forEach {
+                    it.itemMarker.icon = OverlayImage.fromResource(R.drawable.aed_marker)
+                }
+            }
+            else {
+                compoundButton.background = getDrawable(R.color.colorRedCloud)
+                itemsOnMap.filter {
+                    it.itemDistinction == 100
+                }.forEach {
+                    it.itemMarker.icon = OverlayImage.fromResource(R.drawable.pic)
+                }
+
+                compoundButton.background = getDrawable(R.color.transparency)
+            }
+        }
+    }
+    private fun hideShelter(){
+        buttonTsunamiShelter.setOnCheckedChangeListener { compoundButton, isOn ->
+            if(isOn) {
+                compoundButton.background = getDrawable(R.color.colorRedCloud)
+                itemsOnMap.filter {
+                    it.itemDistinction == resources.getInteger(R.integer.TsunamiShelter)
+                }.forEach {
+                    it.itemMarker.icon = OverlayImage.fromResource(R.drawable.tsunami_shelter_marker)
+                }
+            }
+            else{
+                compoundButton.background = getDrawable(R.color.transparency)
+                itemsOnMap.filter {
+                    it.itemDistinction == resources.getInteger(R.integer.TsunamiShelter)
+                }.forEach {
+                    it.itemMarker.icon = OverlayImage.fromResource(R.drawable.pic)
+                }
+            }
+
         }
     }
 
@@ -209,7 +252,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         when(functionCode){
             STARTING -> {
                 if(PermissionManager.existDeniedpermission(this, permissions))
-                   toast("일부 기능이 제한될 수 있습니다.")
+                    toast("일부 기능이 제한될 수 있습니다.")
             }
             MOVE_TO_NOW_LOCATION -> {
                 if(!PermissionManager.existDeniedpermission(this, permissions))
@@ -279,17 +322,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         , itemLatLng: LatLng
         , itemDistinction: Int
         , drawingMap: NaverMap) = Marker().apply{
-            position = itemLatLng
-            map = drawingMap
-            width = markerWidth
-            height = markerHeight
-            icon = when(itemDistinction){
-                resources.getInteger(R.integer.AED)
-                -> OverlayImage.fromResource(R.drawable.aed_marker)
-                resources.getInteger(R.integer.TsunamiShelter)
-                -> OverlayImage.fromResource(R.drawable.tsunami_shelter_marker)
-                else
-                -> OverlayImage.fromResource(R.drawable.question_marker)
-            }
+        position = itemLatLng
+        map = drawingMap
+        width = markerWidth
+        height = markerHeight
+
+        icon = when(itemDistinction){
+            resources.getInteger(R.integer.AED)
+            -> OverlayImage.fromResource(R.drawable.pic)
+            resources.getInteger(R.integer.TsunamiShelter)
+            -> OverlayImage.fromResource(R.drawable.pic)
+            else
+            -> OverlayImage.fromResource(R.drawable.pic)
         }
+    }
+
+
+
+
+
 }
