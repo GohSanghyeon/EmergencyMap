@@ -2,11 +2,9 @@ package com.example.emergencymap
 
 import android.Manifest
 import android.os.Bundle
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.content.Intent
-import android.content.SharedPreferences
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -20,10 +18,7 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.android.synthetic.main.activity_main.*
-//import kotlinx.android.synthetic.main.app_bar_main.*
-//import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.toast
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -35,10 +30,7 @@ val permissionUsing: Array<out String> = arrayOf(
 )
     get() = field.clone()
 
-typealias ItemsInfo = JSONArray?
-
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var locationSource: LocationProvider
     private var map: NaverMap? = null
     private var itemsOnMap: MutableList<ItemInfo> = mutableListOf()
@@ -48,8 +40,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         private const val STARTING = 10000
         private const val MOVE_TO_NOW_LOCATION = 10001
 
-        private var markerWidth = 90
-        private var markerHeight = 120
+        private var markerWidth = 80
+        private var markerHeight = 100
         private var limitDistance = 0.1        //Coordinate Compensation Value
     }
 
@@ -74,7 +66,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             setMapToNowLocation()
         }
 
-        buttonLocationAED.setOnCheckedChangeListener { compoundButton, isOn ->
+        buttonAEDVisible.setOnCheckedChangeListener { compoundButton, isOn ->
             if(isOn) {
                 compoundButton.background = getDrawable(R.color.colorRedCloud)
             }
@@ -83,6 +75,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        setToggleButtonAED()
+        setToggleButtonShelter()
         setEmergencyButton()
     }
 
@@ -172,10 +166,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                         nowItemLatitude
                                         , nowItemLongitude
                                         , nowItemDistinction
-                                        , nowItem))
-
-                                    putMarker(nowItem, nowItemLatLng, nowItemDistinction, map)
+                                        , nowItem
+                                        , putMarker(nowItem, nowItemLatLng, nowItemDistinction, map)))
                                 }
+
                             }
                         }
                     }
@@ -199,6 +193,37 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         if(layoutEmergencySelection is ViewGroup)
             for(menuItem in layoutEmergencySelection)
                 menuItem.setOnClickListener(EmergencyMenuClickListener(layoutEmergencySelection as ViewGroup, this))
+    }
+
+    private fun setToggleButtonAED(){
+        buttonAEDVisible.setOnCheckedChangeListener { compoundButton, isOn ->
+            itemsOnMap.filter {
+                it.itemDistinction == resources.getInteger(R.integer.AED)
+            }.forEach { checkVisibleAndSetMarker(it.itemMarker, it.itemDistinction) }
+
+            if(isOn)
+                compoundButton.background = getDrawable(R.color.colorRedCloud)
+            else
+                compoundButton.background = getDrawable(R.color.transparency)
+        }
+    }
+    private fun setToggleButtonShelter(){
+        buttonShelterVisible.setOnCheckedChangeListener { compoundButton, isOn ->
+            val isTsunamiShelter = resources.getInteger(R.integer.TsunamiShelter)
+            val isMBWShelter = resources.getInteger(R.integer.MBWShelter)
+
+            itemsOnMap.filter {
+                listOf(
+                    resources.getInteger(R.integer.TsunamiShelter)
+                    , resources.getInteger(R.integer.MBWShelter)
+                ).contains(it.itemDistinction)
+            }.forEach { checkVisibleAndSetMarker(it.itemMarker, it.itemDistinction) }
+
+            if(isOn)
+                compoundButton.background = getDrawable(R.color.colorRedCloud)
+            else
+                compoundButton.background = getDrawable(R.color.transparency)
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -247,49 +272,41 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun putMarkers(items: JSONArray, drawingMap: NaverMap){
-        for(nowOrder in 0 until items.length()) {
-            val nowItem = items[nowOrder] as JSONObject?;
-
-            nowItem?.let{
-                val latitude: Double
-                val longitude: Double
-
-                try {
-                    latitude = it.getDouble(getString(R.string.Latitude))
-                    longitude = it.getDouble(getString(R.string.Longitude))
-                }catch(e: JSONException){
-                    Log.d("putting Marker : ", "잘못된 위도-경도")
-                    return@let
-                }
-
-                val newMarker = Marker().apply{
-                    position = LatLng(latitude, longitude)
-                    map = drawingMap
-                    width = markerWidth
-                    height = markerHeight
-                    icon = OverlayImage.fromResource(R.drawable.aed_marker)
-                }
-            }
-        }
-    }
-
     private fun putMarker(
         item: JSONObject
         , itemLatLng: LatLng
         , itemDistinction: Int
-        , drawingMap: NaverMap) = Marker().apply{
-            position = itemLatLng
-            map = drawingMap
-            width = markerWidth
-            height = markerHeight
-            icon = when(itemDistinction){
-                resources.getInteger(R.integer.AED)
-                -> OverlayImage.fromResource(R.drawable.aed_marker)
-                resources.getInteger(R.integer.TsunamiShelter)
-                -> OverlayImage.fromResource(R.drawable.tsunami_shelter_marker)
-                else
-                -> OverlayImage.fromResource(R.drawable.question_marker)
-            }
+        , drawingMap: NaverMap) = Marker().apply {
+
+        position = itemLatLng
+        map = drawingMap
+        width = markerWidth
+        height = markerHeight
+
+        checkVisibleAndSetMarker(this, itemDistinction)
+    }
+
+    private fun checkVisibleAndSetMarker(marker: Marker, distinction: Int){
+        val isAED = resources.getInteger(R.integer.AED)
+
+        val isTsunamiShelter = resources.getInteger(R.integer.TsunamiShelter)
+        val isMBWShelter = resources.getInteger(R.integer.MBWShelter)
+
+        var isVisible = when(distinction){
+            isAED -> buttonAEDVisible.isChecked
+            isTsunamiShelter, isMBWShelter -> buttonShelterVisible.isChecked
+            else -> false
         }
+
+        if(isVisible)
+            marker.icon = when(distinction)
+            {
+                isAED ->  OverlayImage.fromResource(R.drawable.aed_marker)
+                isTsunamiShelter -> OverlayImage.fromResource(R.drawable.tsunami_shelter_marker)
+                isMBWShelter -> OverlayImage.fromResource(R.drawable.mbw_shelter_marker)
+                else -> { Log.d("setMarkerImage", "잘못된 distinction : $distinction"); marker.icon }
+            }
+        else
+            marker.icon = OverlayImage.fromResource(R.drawable.transparent_pixel)
+    }
 }
