@@ -135,12 +135,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 val requestBoundary =
                     Boundary(
                         if ((mapEast - nowLongitude) <= limitDistance) mapEast else nowLongitude + limitDistance
-                        ,
-                        if ((nowLongitude - mapWest) <= limitDistance) mapWest else nowLongitude - limitDistance
-                        ,
-                        if ((nowLatitude - mapSouth) <= limitDistance) mapSouth else nowLatitude - limitDistance
-                        ,
-                        if ((mapNorth - nowLatitude) <= limitDistance) mapNorth else nowLatitude + limitDistance
+                        , if ((nowLongitude - mapWest) <= limitDistance) mapWest else nowLongitude - limitDistance
+                        , if ((nowLatitude - mapSouth) <= limitDistance) mapSouth else nowLatitude - limitDistance
+                        , if ((mapNorth - nowLatitude) <= limitDistance) mapNorth else nowLatitude + limitDistance
                     )
 
                 val taskDownload =
@@ -180,16 +177,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                         itemsOnMap.add(
                                             ItemInfo(
                                                 nowItemNo
-                                                ,
-                                                nowItemLatitude
-                                                ,
-                                                nowItemLongitude
-                                                ,
-                                                nowItemDistinction
-                                                ,
-                                                nowItem
-                                                ,
-                                                putMarker(
+                                                , nowItemLatitude
+                                                , nowItemLongitude
+                                                , nowItemDistinction
+                                                , nowItem
+                                                , putMarker(
                                                     nowItem,
                                                     nowItemLatLng,
                                                     nowItemDistinction,
@@ -198,7 +190,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                             )
                                         )
                                     }
-
                                 }
                             }
                         }
@@ -263,7 +254,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         when(functionCode){
             STARTING -> {
                 if(PermissionManager.existDeniedpermission(this, permissions))
-                   toast("일부 기능이 제한될 수 있습니다.")
+                    toast("일부 기능이 제한될 수 있습니다.")
             }
             MOVE_TO_NOW_LOCATION -> {
                 if(!PermissionManager.existDeniedpermission(this, permissions))
