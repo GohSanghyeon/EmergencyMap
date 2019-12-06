@@ -4,7 +4,8 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.overlay.Marker
 import org.json.JSONObject
 
-class ItemInfo(latitude: Double, longitude: Double, distinction: Int, info: JSONObject, marker: Marker){
+class ItemInfo(itemNo:Int, latitude: Double, longitude: Double, distinction: Int, info: JSONObject, marker: Marker){
+    val itemNo = itemNo
     val itemLatitude = latitude
     val itemLongitude = longitude
     val itemLatLng

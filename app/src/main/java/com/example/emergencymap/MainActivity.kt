@@ -12,6 +12,8 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
+import com.example.emergencymap.notshowing.Boundary
+import com.example.emergencymap.notshowing.ItemsDownloader
 import com.example.emergencymap.notshowing.LocationProvider
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -130,50 +132,77 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 textTestSouth.text = "맵 남단 : ${coordinationBoundary.southLatitude}"
                 textTestNorth.text = "맵 북단 : ${coordinationBoundary.northLatitude}"
 
-                val requestBoundary = Boundary(
-                    if((mapEast - nowLongitude) <= limitDistance) mapEast else nowLongitude + limitDistance
-                    , if((nowLongitude - mapWest) <= limitDistance) mapWest else nowLongitude - limitDistance
-                    , if((nowLatitude - mapSouth) <= limitDistance) mapSouth else nowLatitude - limitDistance
-                    , if((mapNorth - nowLatitude) <= limitDistance) mapNorth else nowLatitude + limitDistance
-                )
+                val requestBoundary =
+                    Boundary(
+                        if ((mapEast - nowLongitude) <= limitDistance) mapEast else nowLongitude + limitDistance
+                        ,
+                        if ((nowLongitude - mapWest) <= limitDistance) mapWest else nowLongitude - limitDistance
+                        ,
+                        if ((nowLatitude - mapSouth) <= limitDistance) mapSouth else nowLatitude - limitDistance
+                        ,
+                        if ((mapNorth - nowLatitude) <= limitDistance) mapNorth else nowLatitude + limitDistance
+                    )
 
-                val taskDownload = ItemsDownloader(requestBoundary, this) { items ->
-                    items?.let { itemArray ->
-                        for (itemPosition in 0 until itemArray.length()) {
-                            (itemArray[itemPosition] as? JSONObject)?.let checkNewItem@ { nowItem ->
-                                var nowItemLatitude: Double
-                                var nowItemLongitude: Double
-                                var nowItemDistinction: Int
-                                var nowItemLatLng: LatLng
+                val taskDownload =
+                    ItemsDownloader(
+                        requestBoundary,
+                        this
+                    ) { items ->
+                        items?.let { itemArray ->
+                            for (itemPosition in 0 until itemArray.length()) {
+                                (itemArray[itemPosition] as? JSONObject)?.let checkNewItem@{ nowItem ->
+                                    var nowItemLatitude: Double
+                                    var nowItemLongitude: Double
+                                    var nowItemDistinction: Int
+                                    var nowItemLatLng: LatLng
+                                    var nowItemNo: Int
 
-                                try{
-                                    nowItemLatitude = nowItem.getDouble(getString(R.string.Latitude))
-                                    nowItemLongitude = nowItem.getDouble(getString(R.string.Longitude))
-                                    nowItemDistinction = nowItem.getInt(getString(R.string.Distinction))
-                                    nowItemLatLng = LatLng(nowItemLatitude, nowItemLongitude)
-                                }catch(e: JSONException){
-                                    Log.d("Item Check", "잘못된 JSON형식!", e)
-                                    return@checkNewItem
+                                    try {
+                                        nowItemNo = nowItem.getInt(getString(R.string.ItemNo))
+                                        nowItemLatitude =
+                                            nowItem.getDouble(getString(R.string.Latitude))
+                                        nowItemLongitude =
+                                            nowItem.getDouble(getString(R.string.Longitude))
+                                        nowItemDistinction =
+                                            nowItem.getInt(getString(R.string.Distinction))
+                                        nowItemLatLng = LatLng(nowItemLatitude, nowItemLongitude)
+                                    } catch (e: JSONException) {
+                                        Log.d("Item Check", "잘못된 JSON형식!", e)
+                                        return@checkNewItem
+                                    }
+
+                                    val isNewItem = itemsOnMap.count { oneItemOnMap ->
+                                        oneItemOnMap.itemNo == nowItemNo
+                                                && oneItemOnMap.itemDistinction == nowItemDistinction
+                                    } == 0
+
+                                    if (isNewItem) {
+                                        itemsOnMap.add(
+                                            ItemInfo(
+                                                nowItemNo
+                                                ,
+                                                nowItemLatitude
+                                                ,
+                                                nowItemLongitude
+                                                ,
+                                                nowItemDistinction
+                                                ,
+                                                nowItem
+                                                ,
+                                                putMarker(
+                                                    nowItem,
+                                                    nowItemLatLng,
+                                                    nowItemDistinction,
+                                                    map
+                                                )
+                                            )
+                                        )
+                                    }
+
                                 }
-
-                                val isNewItem = itemsOnMap.count { oneItemOnMap ->
-                                    oneItemOnMap.itemLatLng == nowItemLatLng
-                                            && oneItemOnMap.itemDistinction == nowItemDistinction
-                                } == 0
-
-                                if(isNewItem){
-                                    itemsOnMap.add(ItemInfo(
-                                        nowItemLatitude
-                                        , nowItemLongitude
-                                        , nowItemDistinction
-                                        , nowItem
-                                        , putMarker(nowItem, nowItemLatLng, nowItemDistinction, map)))
-                                }
-
                             }
                         }
                     }
-                }
 
                 taskDownload.execute()
             }
