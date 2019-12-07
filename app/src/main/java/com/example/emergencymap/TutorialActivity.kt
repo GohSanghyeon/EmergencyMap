@@ -8,10 +8,9 @@ import kotlinx.android.synthetic.main.activity_app_tutorial.*
 import kotlinx.android.synthetic.main.activity_app_tutorial.buttonEmergency
 import kotlinx.android.synthetic.main.activity_app_tutorial.buttonList
 import kotlinx.android.synthetic.main.activity_app_tutorial.buttonLocationAED
-import kotlinx.android.synthetic.main.activity_app_tutorial.buttonLocationWaterEquip
+import kotlinx.android.synthetic.main.activity_app_tutorial.buttonLocationPharmacies
 import kotlinx.android.synthetic.main.activity_app_tutorial.buttonNowLocation
 import kotlinx.android.synthetic.main.activity_app_tutorial.buttonSaveFromMap
-import kotlinx.android.synthetic.main.activity_main.*
 
 class TutorialActivity : AppCompatActivity() {
     var viewList : ArrayList<View> = ArrayList<View>()
@@ -68,11 +67,11 @@ class TutorialActivity : AppCompatActivity() {
             tipView.text = "버튼을 클릭하면 응급구조용품의 위치를 알 수 있습니다."
         }
 
-        buttonLocationGasMask.setOnClickListener {
+        buttonLocationShelters.setOnClickListener {
             tipView.text = "버튼을 클릭하면 응급구조용품의 위치를 알 수 있습니다."
         }
 
-        buttonLocationWaterEquip.setOnClickListener {
+        buttonLocationPharmacies.setOnClickListener {
             tipView.text = "버튼을 클릭하면 응급구조용품의 위치를 알 수 있습니다."
         }
 

@@ -19,6 +19,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
@@ -92,6 +93,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         setToggleButtonAED()
         setToggleButtonShelter()
         setToggleButtonEmergencyRoom()
+        setToggleButtonPharmacy()
         setEmergencyButton()
     }
 
@@ -235,6 +237,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         , nowRegionInfo.getInt(getString(R.string.itemNumAED))
                         , nowRegionInfo.getInt(getString(R.string.itemNumShelters))
                         , nowRegionInfo.getInt(getString(R.string.itemNumEmergencyRooms))
+                        , nowRegionInfo.getInt(getString(R.string.itemNumPharmacies))
                         , centerLatitude
                         , centerLongitude
                         , nowRegionMarker
@@ -346,6 +349,29 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun setToggleButtonPharmacy(){
+        buttonPharmaciesVisible.setOnCheckedChangeListener { compoundButton, isOn ->
+            itemsOnMap.filter {
+                it.itemDistinction == resources.getInteger(R.integer.Pharmacy)
+            }.forEach {
+                it.itemMarker.isVisible = isItemMarkerZoomLevel
+                        && buttonPharmaciesVisible.isChecked
+            }
+
+            regionsOnMap.forEach {
+                val nowRegionInfoAdapter
+                        = it.value.RegionMarker.infoWindow?.adapter as? RegionInfoWindowAdapter
+
+                nowRegionInfoAdapter?.let{ it.addPharmacies = isOn }
+            }
+
+            if(isOn)
+                compoundButton.background = getDrawable(R.color.colorRedCloud)
+            else
+                compoundButton.background = getDrawable(R.color.transparency)
+        }
+    }
+
     override fun onRequestPermissionsResult(
         functionCode: Int,
         permissions: Array<out String>,
@@ -412,6 +438,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val isTsunamiShelter = resources.getInteger(R.integer.TsunamiShelter)
         val isMBWShelter = resources.getInteger(R.integer.MBWShelter)
         val isEmergencyRoom = resources.getInteger(R.integer.EmergencyRoom)
+        val isPharmacy = resources.getInteger(R.integer.Pharmacy)
 
         marker.icon =
             when(distinction) {
@@ -419,6 +446,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 isTsunamiShelter -> OverlayImage.fromResource(R.drawable.tsunami_shelter_marker)
                 isMBWShelter -> OverlayImage.fromResource(R.drawable.mbw_shelter_marker)
                 isEmergencyRoom -> OverlayImage.fromResource(R.drawable.emergency_room_marker)
+                isPharmacy -> OverlayImage.fromResource(R.drawable.pharmacy_marker)
                 else -> {
                     Log.d("setMarkerImage", "잘못된 distinction : $distinction");
                     OverlayImage.fromResource(R.drawable.transparent_pixel)
@@ -430,6 +458,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             isAED -> buttonAEDVisible.isChecked
             isTsunamiShelter, isMBWShelter -> buttonShelterVisible.isChecked
             isEmergencyRoom -> buttonEmergencyRoomVisible.isChecked
+            isPharmacy -> buttonPharmaciesVisible.isChecked
             else -> false
         }
     }
@@ -449,6 +478,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     -> buttonShelterVisible.isChecked
                     resources.getInteger(R.integer.EmergencyRoom)
                     -> buttonEmergencyRoomVisible.isChecked
+                    resources.getInteger(R.integer.Pharmacy)
+                    -> buttonPharmaciesVisible.isChecked
                     else -> false
                 }
             }

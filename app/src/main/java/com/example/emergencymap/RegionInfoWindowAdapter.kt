@@ -24,6 +24,8 @@ class RegionInfoWindowAdapter(
         set(value) { field = value;  infoWindow?.invalidate() }
     var addEmergencyRooms = false
         set(value) { field = value;  infoWindow?.invalidate() }
+    var addPharmacies = false
+        set(value) { field = value;  infoWindow?.invalidate() }
 
     override fun getContentView(nowInfoWindow: InfoWindow): View {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -61,7 +63,7 @@ class RegionInfoWindowAdapter(
                 result += if (addAED) nowRegionInfo.numberAED else 0
                 result += if (addShelters) nowRegionInfo.numberShelters else 0
                 result += if (addEmergencyRooms) nowRegionInfo.numberEmergencyRooms else 0
-
+                result += if (addPharmacies) nowRegionInfo.numberPharmacies else 0
                 Log.d("현재대피소", result.toString())
             } ?: Log.d(
                 "calculateItemsNumber"
@@ -73,6 +75,6 @@ class RegionInfoWindowAdapter(
     }
 
     private fun isAddNothing() : Boolean{
-        return !addAED && !addShelters && !addEmergencyRooms
+        return !addAED && !addShelters && !addEmergencyRooms && !addPharmacies
     }
 }

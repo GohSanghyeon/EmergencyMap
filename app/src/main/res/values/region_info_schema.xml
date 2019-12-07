@@ -4,6 +4,7 @@
     <string name="itemNumAED">NumItemsAED</string>
     <string name="itemNumShelters">NumItemsShelters</string>
     <string name="itemNumEmergencyRooms">NumItemsEmergencyRooms</string>
+    <string name="itemNumPharmacies">NumItemsPharmacies</string>
     <string name="centerLatitude">CenterLatitude</string>
     <string name="centerLongitude">CenterLongitude</string>
 </resources>
