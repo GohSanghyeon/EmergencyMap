@@ -42,6 +42,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         private const val STARTING = 10000
         private const val MOVE_TO_NOW_LOCATION = 10001
 
+        const val ITEMS_NUMBERS_OF_REGIONS = "Items numbers of Regions"
+
         private var markerWidth = 80
         private var markerHeight = 100
         private var limitDistance = 0.1        //Coordinate Compensation Value

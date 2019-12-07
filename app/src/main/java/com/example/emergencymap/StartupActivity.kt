@@ -15,6 +15,7 @@ import org.jetbrains.anko.toast
 class StartupActivity : AppCompatActivity(){
     companion object{
         const val MILLISEC_CHECKING_DISCONNECTED = 5000L
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +36,12 @@ class StartupActivity : AppCompatActivity(){
                 }
 
                 RegionInfoDownloader(this@StartupActivity) {
-                    startActivity<MainActivity>()
+                    var strItemNumbersOfRegions = ""
+                    it?.let{ strItemNumbersOfRegions = it.toString() }
+
+                    startActivity<MainActivity>(
+                        MainActivity.ITEMS_NUMBERS_OF_REGIONS to strItemNumbersOfRegions
+                    )
                 }.execute()
             }
             , doingIsDisconnected = {
