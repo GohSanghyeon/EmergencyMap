@@ -1,13 +1,10 @@
 package com.example.emergencymap
 
 import android.Manifest
-import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.content.Intent
-import android.location.Geocoder
-import android.location.LocationManager
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -20,12 +17,15 @@ import com.example.emergencymap.notshowing.ItemsDownloader
 import com.example.emergencymap.notshowing.LocationProvider
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
+import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.concurrent.ConcurrentHashMap
 
 val permissionUsing: Array<out String> = arrayOf(
     Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -40,6 +40,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var map: NaverMap? = null
     private var itemsOnMap: MutableList<ItemInfo> = mutableListOf()
 
+    private val regionsOnMap: ConcurrentHashMap<String, RegionInfo> = ConcurrentHashMap()
+    private val regionInfoWindows: MutableList<InfoWindow> = mutableListOf()
+
+    private var isItemMarkerZoomLevel = true
+    private var wasItemMarkerZoomLevel = true
+
     companion object{
         //for permission check
         private const val STARTING = 10000
@@ -50,6 +56,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         private var markerWidth = 80
         private var markerHeight = 100
         private var limitDistance = 0.1        //Coordinate Compensation Value
+        private var minZoom = 5.0
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,10 +126,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val heungup = LatLng(37.30260779, 127.9211684)
         naverMap.moveCamera(CameraUpdate.scrollTo(heungup))
 
+        setRegionMarkers(naverMap)
+
         map = naverMap
-        map?.uiSettings?.isCompassEnabled = false
-        map?.addOnCameraIdleListener {
-            map?.let { map ->
+        map?.let { map->
+            map.uiSettings.isCompassEnabled = false
+            map.minZoom = minZoom
+            map.addOnCameraIdleListener {
+                isItemMarkerZoomLevel = map.cameraPosition.zoom > 12.0
+
+                refreshAllMarkersVisibility(isItemMarkerZoomLevel)
+
                 val nowLatitude = map.cameraPosition.target.latitude
                 val nowLongitude = map.cameraPosition.target.longitude
 
@@ -131,11 +145,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 val mapWest = coordinationBoundary.westLongitude
                 val mapSouth = coordinationBoundary.southLatitude
                 val mapNorth = coordinationBoundary.northLatitude
-
-                textTestEast.text = "맵 동단 : ${coordinationBoundary.eastLongitude}"
-                textTestWest.text = "맵 서단 : ${coordinationBoundary.westLongitude}"
-                textTestSouth.text = "맵 남단 : ${coordinationBoundary.southLatitude}"
-                textTestNorth.text = "맵 북단 : ${coordinationBoundary.northLatitude}"
 
                 val requestBoundary =
                     Boundary(
@@ -153,11 +162,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         items?.let { itemArray ->
                             for (itemPosition in 0 until itemArray.length()) {
                                 (itemArray[itemPosition] as? JSONObject)?.let checkNewItem@{ nowItem ->
-                                    var nowItemLatitude: Double
-                                    var nowItemLongitude: Double
-                                    var nowItemDistinction: Int
-                                    var nowItemLatLng: LatLng
-                                    var nowItemNo: Int
+                                    val nowItemLatitude: Double
+                                    val nowItemLongitude: Double
+                                    val nowItemDistinction: Int
+                                    val nowItemLatLng: LatLng
+                                    val nowItemNo: Int
 
                                     try {
                                         nowItemNo = nowItem.getInt(getString(R.string.ItemNo))
@@ -167,7 +176,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                             nowItem.getDouble(getString(R.string.Longitude))
                                         nowItemDistinction =
                                             nowItem.getInt(getString(R.string.Distinction))
-                                        nowItemLatLng = LatLng(nowItemLatitude, nowItemLongitude)
+                                        nowItemLatLng =
+                                            LatLng(nowItemLatitude, nowItemLongitude)
                                     } catch (e: JSONException) {
                                         Log.d("Item Check", "잘못된 JSON형식!", e)
                                         return@checkNewItem
@@ -205,6 +215,46 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun setRegionMarkers(map: NaverMap) {
+        intent.getStringExtra(ITEMS_NUMBERS_OF_REGIONS)?.let{
+            var jsonItemNumberOfRegion: JSONArray
+            try {
+                jsonItemNumberOfRegion = JSONArray(it)
+
+                for(regionIndex in 0 until jsonItemNumberOfRegion.length()){
+                    val nowRegionInfo = jsonItemNumberOfRegion[regionIndex] as JSONObject
+
+                    val sidoName = nowRegionInfo.getString(getString(R.string.sido))
+                    val centerLatitude = nowRegionInfo.getDouble(getString(R.string.centerLatitude))
+                    val centerLongitude = nowRegionInfo.getDouble(getString(R.string.centerLongitude))
+                    val nowRegionMarker = putRegionMarker(LatLng(centerLatitude, centerLongitude), sidoName, map)
+
+                    regionsOnMap[sidoName] = RegionInfo(
+                        sidoName
+                        , nowRegionInfo.getInt(getString(R.string.itemNumAED))
+                        , nowRegionInfo.getInt(getString(R.string.itemNumShelters))
+                        , centerLatitude
+                        , centerLongitude
+                        , nowRegionMarker
+                    )
+
+                    InfoWindow().apply{
+                        adapter = RegionInfoWindowAdapter(regionsOnMap, this@MainActivity)
+                        open(nowRegionMarker)
+                    }
+                }
+            }
+            catch(e: JSONException){
+                Log.d(ITEMS_NUMBERS_OF_REGIONS, "JSONArray 변환 실패", e)
+            }
+            catch(e: TypeCastException){
+                Log.d(ITEMS_NUMBERS_OF_REGIONS, "지역별 JSONObject 변환 실패", e)
+            }
+
+
+        } ?: Log.d(ITEMS_NUMBERS_OF_REGIONS, "JSONArray 받기 실패(null)")
+    }
+
     private fun setEmergencyButton(){
         buttonEmergency.setOnClickListener {
             //show emergency menu selections
@@ -224,7 +274,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         buttonAEDVisible.setOnCheckedChangeListener { compoundButton, isOn ->
             itemsOnMap.filter {
                 it.itemDistinction == resources.getInteger(R.integer.AED)
-            }.forEach { checkVisibleAndSetMarker(it.itemMarker, it.itemDistinction) }
+            }.forEach {
+                it.itemMarker.isVisible = isItemMarkerZoomLevel
+                        && buttonAEDVisible.isChecked
+            }
+
+            regionsOnMap.forEach {
+                val nowRegionInfoAdapter
+                        = it.value.RegionMarker.infoWindow?.adapter as? RegionInfoWindowAdapter
+
+                nowRegionInfoAdapter?.let{ it.addAED = isOn }
+            }
 
             if(isOn)
                 compoundButton.background = getDrawable(R.color.colorRedCloud)
@@ -242,7 +302,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     resources.getInteger(R.integer.TsunamiShelter)
                     , resources.getInteger(R.integer.MBWShelter)
                 ).contains(it.itemDistinction)
-            }.forEach { checkVisibleAndSetMarker(it.itemMarker, it.itemDistinction) }
+            }.forEach {
+                it.itemMarker.isVisible = isItemMarkerZoomLevel
+                        && buttonShelterVisible.isChecked
+            }
+
+            regionsOnMap.forEach {
+                val nowRegionInfoAdapter
+                        = it.value.RegionMarker.infoWindow?.adapter as? RegionInfoWindowAdapter
+
+                nowRegionInfoAdapter?.let{ it.addShelters = isOn }
+            }
 
             if(isOn)
                 compoundButton.background = getDrawable(R.color.colorRedCloud)
@@ -308,30 +378,72 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         width = markerWidth
         height = markerHeight
 
-        checkVisibleAndSetMarker(this, itemDistinction)
+        initializeMarkerShow(this, itemDistinction)
     }
 
-    private fun checkVisibleAndSetMarker(marker: Marker, distinction: Int){
+    private fun initializeMarkerShow(marker: Marker, distinction: Int){
         val isAED = resources.getInteger(R.integer.AED)
 
         val isTsunamiShelter = resources.getInteger(R.integer.TsunamiShelter)
         val isMBWShelter = resources.getInteger(R.integer.MBWShelter)
 
-        var isVisible = when(distinction){
+        marker.icon =
+            when(distinction) {
+            isAED ->  OverlayImage.fromResource(R.drawable.aed_marker)
+            isTsunamiShelter -> OverlayImage.fromResource(R.drawable.tsunami_shelter_marker)
+            isMBWShelter -> OverlayImage.fromResource(R.drawable.mbw_shelter_marker)
+            else -> {
+                Log.d("setMarkerImage", "잘못된 distinction : $distinction");
+                OverlayImage.fromResource(R.drawable.transparent_pixel)
+            }
+        }
+
+        marker.isVisible = wasItemMarkerZoomLevel
+                && when(distinction){
             isAED -> buttonAEDVisible.isChecked
             isTsunamiShelter, isMBWShelter -> buttonShelterVisible.isChecked
             else -> false
         }
+    }
 
-        if(isVisible)
-            marker.icon = when(distinction)
-            {
-                isAED ->  OverlayImage.fromResource(R.drawable.aed_marker)
-                isTsunamiShelter -> OverlayImage.fromResource(R.drawable.tsunami_shelter_marker)
-                isMBWShelter -> OverlayImage.fromResource(R.drawable.mbw_shelter_marker)
-                else -> { Log.d("setMarkerImage", "잘못된 distinction : $distinction"); marker.icon }
+    private fun refreshAllMarkersVisibility(isItemMarkerZoomLevel: Boolean){
+        val needChange = isItemMarkerZoomLevel.xor(wasItemMarkerZoomLevel)
+
+        if(needChange) {
+            itemsOnMap.forEach {
+                it.itemMarker.isVisible = isItemMarkerZoomLevel
+                        && when (it.itemDistinction) {
+                    resources.getInteger(R.integer.AED)
+                    -> buttonAEDVisible.isChecked
+                    resources.getInteger(R.integer.TsunamiShelter)
+                    -> buttonShelterVisible.isChecked
+                    resources.getInteger(R.integer.MBWShelter)
+                    -> buttonShelterVisible.isChecked
+                    else -> false
+                }
             }
+
+            regionsOnMap.forEach{
+                val nowRegionInfo = it.value
+                nowRegionInfo.RegionMarker.isVisible = !isItemMarkerZoomLevel
+            }
+        }
         else
-            marker.icon = OverlayImage.fromResource(R.drawable.transparent_pixel)
+            return
+
+        wasItemMarkerZoomLevel = isItemMarkerZoomLevel
+    }
+
+    private fun putRegionMarker(
+        regionPosition: LatLng
+        , regionName: String
+        , drawingMap: NaverMap
+    ) = Marker().apply {
+
+        position = regionPosition
+        map = drawingMap
+        tag = regionName
+        width = markerWidth
+        height = markerHeight
     }
 }

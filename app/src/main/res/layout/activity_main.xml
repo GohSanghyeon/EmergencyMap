@@ -204,44 +204,4 @@
 
     </TableLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/rounded_square_whitecloud"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="맵 영역(테스트용)" />
-
-        <TextView
-            android:id="@+id/textTestEast"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="맵 동단 :" />
-
-        <TextView
-            android:id="@+id/textTestWest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="맵 서단 :" />
-
-        <TextView
-            android:id="@+id/textTestSouth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="맵 남단 :" />
-
-        <TextView
-            android:id="@+id/textTestNorth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="맵 북단 :" />
-    </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
