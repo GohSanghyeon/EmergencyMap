@@ -10,5 +10,13 @@
         android:id="@+id/viewEducationImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
          />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="156dp"
+        android:layout_weight="1"
+        android:text="테스트용 텍스트" />
 </LinearLayout>
