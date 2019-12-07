@@ -91,6 +91,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         setToggleButtonAED()
         setToggleButtonShelter()
+        setToggleButtonEmergencyRoom()
         setEmergencyButton()
     }
 
@@ -233,6 +234,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         sidoName
                         , nowRegionInfo.getInt(getString(R.string.itemNumAED))
                         , nowRegionInfo.getInt(getString(R.string.itemNumShelters))
+                        , nowRegionInfo.getInt(getString(R.string.itemNumEmergencyRooms))
                         , centerLatitude
                         , centerLongitude
                         , nowRegionMarker
@@ -321,6 +323,29 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun setToggleButtonEmergencyRoom() {
+        buttonEmergencyRoomVisible.setOnCheckedChangeListener { compoundButton, isOn ->
+            itemsOnMap.filter {
+                it.itemDistinction == resources.getInteger(R.integer.EmergencyRoom)
+            }.forEach {
+                it.itemMarker.isVisible = isItemMarkerZoomLevel
+                        && buttonEmergencyRoomVisible.isChecked
+            }
+
+            regionsOnMap.forEach {
+                val nowRegionInfoAdapter
+                        = it.value.RegionMarker.infoWindow?.adapter as? RegionInfoWindowAdapter
+
+                nowRegionInfoAdapter?.let{ it.addEmergencyRooms = isOn }
+            }
+
+            if(isOn)
+                compoundButton.background = getDrawable(R.color.colorRedCloud)
+            else
+                compoundButton.background = getDrawable(R.color.transparency)
+        }
+    }
+
     override fun onRequestPermissionsResult(
         functionCode: Int,
         permissions: Array<out String>,
@@ -386,15 +411,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val isTsunamiShelter = resources.getInteger(R.integer.TsunamiShelter)
         val isMBWShelter = resources.getInteger(R.integer.MBWShelter)
+        val isEmergencyRoom = resources.getInteger(R.integer.EmergencyRoom)
 
         marker.icon =
             when(distinction) {
-            isAED ->  OverlayImage.fromResource(R.drawable.aed_marker)
-            isTsunamiShelter -> OverlayImage.fromResource(R.drawable.tsunami_shelter_marker)
-            isMBWShelter -> OverlayImage.fromResource(R.drawable.mbw_shelter_marker)
-            else -> {
-                Log.d("setMarkerImage", "잘못된 distinction : $distinction");
-                OverlayImage.fromResource(R.drawable.transparent_pixel)
+                isAED ->  OverlayImage.fromResource(R.drawable.aed_marker)
+                isTsunamiShelter -> OverlayImage.fromResource(R.drawable.tsunami_shelter_marker)
+                isMBWShelter -> OverlayImage.fromResource(R.drawable.mbw_shelter_marker)
+                isEmergencyRoom -> OverlayImage.fromResource(R.drawable.emergency_room_marker)
+                else -> {
+                    Log.d("setMarkerImage", "잘못된 distinction : $distinction");
+                    OverlayImage.fromResource(R.drawable.transparent_pixel)
             }
         }
 
@@ -402,6 +429,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 && when(distinction){
             isAED -> buttonAEDVisible.isChecked
             isTsunamiShelter, isMBWShelter -> buttonShelterVisible.isChecked
+            isEmergencyRoom -> buttonEmergencyRoomVisible.isChecked
             else -> false
         }
     }
@@ -419,6 +447,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     -> buttonShelterVisible.isChecked
                     resources.getInteger(R.integer.MBWShelter)
                     -> buttonShelterVisible.isChecked
+                    resources.getInteger(R.integer.EmergencyRoom)
+                    -> buttonEmergencyRoomVisible.isChecked
                     else -> false
                 }
             }

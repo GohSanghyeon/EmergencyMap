@@ -171,13 +171,13 @@
                 android:background="@android:color/black" />
 
             <ToggleButton
-                android:id="@+id/buttonFireplugVisible"
+                android:id="@+id/buttonEmergencyRoomVisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/transparency"
-                android:textOff="소화전"
-                android:textOn="소화전" />
+                android:textOff="응급실"
+                android:textOn="응급실" />
 
             <View
                 android:id="@+id/divider3"

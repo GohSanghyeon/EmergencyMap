@@ -7,6 +7,7 @@ class RegionInfo(
     sido: String
     , numberAED: Int
     , numberShelters: Int
+    , numberEmergencyRooms: Int
     , centerLatitude: Double
     , centerLongitude: Double
     , marker: Marker){
@@ -14,7 +15,8 @@ class RegionInfo(
 
     val numberAED = numberAED
     val numberShelters = numberShelters
-    val numberAll get() = numberAED + numberShelters
+    val numberEmergencyRooms = numberEmergencyRooms
+    val numberAll get() = numberAED + numberShelters + numberEmergencyRooms
 
     val centerLatitude = centerLatitude
     val centerLongitude = centerLongitude

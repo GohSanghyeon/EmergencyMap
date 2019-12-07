@@ -139,15 +139,14 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/black" />
 
-            <ToggleButton
+            <Button
                 android:id="@+id/buttonLocationAED"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/transparency"
                 android:padding="@dimen/button_general_padding"
-                android:textOff="AED"
-                android:textOn="AED" />
+                android:text="AED" />
 
             <View
                 android:id="@+id/divider1"
@@ -155,14 +154,13 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/black" />
 
-            <ToggleButton
+            <Button
                 android:id="@+id/buttonLocationGasMask"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/transparency"
-                android:textOff="방독면"
-                android:textOn="방독면" />
+                android:text="대피소" />
 
             <View
                 android:id="@+id/divider2"
@@ -170,15 +168,13 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/black" />
 
-            <ToggleButton
+            <Button
                 android:id="@+id/buttonLocationFireplug"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/transparency"
-                android:text="ToggleButton"
-                android:textOff="소화전"
-                android:textOn="소화전" />
+                android:text="응급실" />
 
             <View
                 android:id="@+id/divider3"
@@ -186,14 +182,13 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/black" />
 
-            <ToggleButton
+            <Button
                 android:id="@+id/buttonLocationWaterEquip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/transparency"
-                android:textOff="해상구조용품"
-                android:textOn="해상구조용품"
+                android:text="해상구조용품"
                 android:textSize="11sp" />
 
             <View
