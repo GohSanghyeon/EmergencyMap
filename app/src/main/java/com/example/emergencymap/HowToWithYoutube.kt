@@ -7,6 +7,7 @@ import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import kotlinx.android.synthetic.main.activity_howto.*
+import kotlinx.android.synthetic.main.activity_howto.view.*
 
 class HowToWithYoutube : YouTubeBaseActivity() {
 
@@ -36,18 +37,26 @@ class HowToWithYoutube : YouTubeBaseActivity() {
         Log.d("Youtube Item Number", itemIs.toString())
         title = VIDEO_ID[itemIs].first
         initUI()
+
     }
     private fun initUI() {
         youtubePlayerInit = object :YouTubePlayer.OnInitializedListener{
-            override fun onInitializationSuccess(p0: YouTubePlayer.Provider?, youTubePlayer: YouTubePlayer, p2: Boolean)
-                 = youTubePlayer.loadVideo(VIDEO_ID[itemIs].second)
+            override fun onInitializationSuccess(p0: YouTubePlayer.Provider?, youTubePlayer: YouTubePlayer, p2: Boolean){
+                 youTubePlayer.loadVideo(VIDEO_ID[itemIs].second)
+                youTubePlayer.setOnFullscreenListener { youTubePlayer.setFullscreen(false) }
+            }
+                   // = youTubePlayer.loadVideo(VIDEO_ID[itemIs].second)
 
             override fun onInitializationFailure(p0: YouTubePlayer.Provider?, p1: YouTubeInitializationResult?) {
                 Toast.makeText(applicationContext, "something went wrong", Toast.LENGTH_SHORT).show()
             }
+
         }
-        playaedvideo.setOnClickListener { _ ->
+       playaedvideo.setOnClickListener { _ ->
             youtube_view.initialize(YOUTUBE_API_KEY, youtubePlayerInit)
+
         }
+
+
     }
 }

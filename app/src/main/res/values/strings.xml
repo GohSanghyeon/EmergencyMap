@@ -6,13 +6,10 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
 
-
-    <string name="menu_home">홈</string>
-    <string name="menu_tutorial">어플 사용법</string>
-    <string name="menu_slideshow">구조 용품 사용법</string>
-    <string name="menu_tools">기능3</string>
-    <string name="menu_share">기능4</string>
-    <string name="menu_send">라이센스</string>
+    <string name="title1">1. 자동제세동기 </string>
+    <string name="title2">2. 방독면 </string>
+    <string name="title3">3. 소화전 </string>
+    <string name="title4">4. 해상구조용품 </string>
 
     <string name="tutorial_introduction">
         궁금한 위젯을 클릭하여\n

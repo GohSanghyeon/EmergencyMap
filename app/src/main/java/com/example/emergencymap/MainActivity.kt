@@ -1,11 +1,13 @@
 package com.example.emergencymap
 
 import android.Manifest
+import android.content.Context
 import android.os.Bundle
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.content.Intent
+import android.location.Geocoder
+import android.location.LocationManager
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -19,16 +21,11 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import kotlinx.android.synthetic.main.activity_main.*
-//import kotlinx.android.synthetic.main.app_bar_main.*
-//import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.dialog_sms.*
 import org.jetbrains.anko.toast
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.lang.Exception
-import java.net.URL
+import java.util.*
 
 val permissionUsing: Array<out String> = arrayOf(
     Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -38,10 +35,7 @@ val permissionUsing: Array<out String> = arrayOf(
 )
     get() = field.clone()
 
-typealias ItemsInfo = JSONArray?
-
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var locationSource: LocationProvider
     private var map: NaverMap? = null
     private var itemsOnMap: MutableList<ItemInfo> = mutableListOf()
@@ -51,14 +45,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         private const val STARTING = 10000
         private const val MOVE_TO_NOW_LOCATION = 10001
 
-        private var markerWidth = 60
-        private var markerHeight = 80
+        private var markerWidth = 80
+        private var markerHeight = 100
         private var limitDistance = 0.1        //Coordinate Compensation Value
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         if(PermissionManager.existDeniedpermission(this, permissionUsing))
             PermissionManager.showOnlyRequestAnd(this, permissionUsing, STARTING,
@@ -68,6 +63,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 toast("일부 기능이 제한될 수 있습니다.")
             }
 
+        checkShowingTutorial()
+
         mountMap()
         locationSource = LocationProvider(this)
 
@@ -75,7 +72,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             setMapToNowLocation()
         }
 
-        buttonLocationAED.setOnCheckedChangeListener { compoundButton, isOn ->
+        buttonAEDVisible.setOnCheckedChangeListener { compoundButton, isOn ->
             if(isOn) {
                 compoundButton.background = getDrawable(R.color.colorRedCloud)
             }
@@ -84,7 +81,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+
+
+        setToggleButtonAED()
+        setToggleButtonShelter()
         setEmergencyButton()
+    }
+
+    private fun checkShowingTutorial() {
+        val pref
+                = getSharedPreferences(TutorialActivity.PREFERENCES_TUTORIAL_NAME, MODE_PRIVATE)
+
+        val isCheckedNeverShow
+                = pref.getInt("First", TutorialActivity.UNCHECKED_NEVER_SHOW_TUTORIAL)
+
+        if(isCheckedNeverShow == TutorialActivity.UNCHECKED_NEVER_SHOW_TUTORIAL){
+            val intent = Intent(this, TutorialActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun mountMap() {
@@ -99,81 +113,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapFragment.getMapAsync(this)
         locationSource = LocationProvider(this)
-
-        val marker = Marker()
-        marker.map
-    }
-
-    private fun setEmergencyButton(){
-        buttonEmergency.setOnClickListener {
-            //show emergency menu selections
-            if(layoutEmergencySelection.isVisible)
-                layoutEmergencySelection.visibility = View.INVISIBLE
-            else
-                layoutEmergencySelection.visibility = View.VISIBLE
-        }
-
-        //emergency menu click listener setting
-        if(layoutEmergencySelection is ViewGroup)
-            for(menuItem in layoutEmergencySelection)
-                menuItem.setOnClickListener(EmergencyMenuClickListener(layoutEmergencySelection as ViewGroup, this))
-    }
-
-    override fun onRequestPermissionsResult(
-        functionCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        when(functionCode){
-            STARTING -> {
-                if(PermissionManager.existDeniedpermission(this, permissions))
-                   toast("일부 기능이 제한될 수 있습니다.")
-            }
-            MOVE_TO_NOW_LOCATION -> {
-                if(!PermissionManager.existDeniedpermission(this, permissions))
-                    setMapToNowLocation()
-                else
-                    toast("권한이 허가되지 않아 기능을 이용할 수 없습니다.")
-            }
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-
-            R.id.apptuto ->{
-
-            }
-            R.id.howtool ->
-                startActivity(Intent(this, SelectionForEducation::class.java))
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
-        val marker = Marker()
         val heungup = LatLng(37.30260779, 127.9211684)
-        marker.position = heungup
         naverMap.moveCamera(CameraUpdate.scrollTo(heungup))
-        marker.map = naverMap
-        marker.width = markerWidth
-        marker.height = markerHeight
-        marker.icon = OverlayImage.fromResource(R.drawable.aed)
-    //
+
         map = naverMap
         map?.uiSettings?.isCompassEnabled = false
         map?.addOnCameraIdleListener {
             map?.let { map ->
                 val nowLatitude = map.cameraPosition.target.latitude
                 val nowLongitude = map.cameraPosition.target.longitude
+
 
                 val coordinationBoundary = map.contentBounds
                 val mapEast = coordinationBoundary.eastLongitude
@@ -202,11 +155,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                 var nowItemDistinction: Int
                                 var nowItemLatLng: LatLng
 
+
                                 try{
                                     nowItemLatitude = nowItem.getDouble(getString(R.string.Latitude))
                                     nowItemLongitude = nowItem.getDouble(getString(R.string.Longitude))
                                     nowItemDistinction = nowItem.getInt(getString(R.string.Distinction))
                                     nowItemLatLng = LatLng(nowItemLatitude, nowItemLongitude)
+
                                 }catch(e: JSONException){
                                     Log.d("Item Check", "잘못된 JSON형식!", e)
                                     return@checkNewItem
@@ -222,10 +177,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                         nowItemLatitude
                                         , nowItemLongitude
                                         , nowItemDistinction
-                                        , nowItem))
-
-                                    putMarker(nowItem, nowItemLatLng, nowItemDistinction, map)
+                                        , nowItem
+                                        , putMarker(nowItem, nowItemLatLng, nowItemDistinction, map)))
                                 }
+
                             }
                         }
                     }
@@ -234,6 +189,89 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 taskDownload.execute()
             }
         }
+    }
+
+    private fun setEmergencyButton(){
+        buttonEmergency.setOnClickListener {
+            //show emergency menu selections
+            if(layoutEmergencySelection.isVisible)
+                layoutEmergencySelection.visibility = View.INVISIBLE
+            else
+                layoutEmergencySelection.visibility = View.VISIBLE
+        }
+
+        //emergency menu click listener setting
+        if(layoutEmergencySelection is ViewGroup)
+            for(menuItem in layoutEmergencySelection)
+                menuItem.setOnClickListener(EmergencyMenuClickListener(layoutEmergencySelection as ViewGroup, this))
+    }
+
+    private fun setToggleButtonAED(){
+        buttonAEDVisible.setOnCheckedChangeListener { compoundButton, isOn ->
+            itemsOnMap.filter {
+                it.itemDistinction == resources.getInteger(R.integer.AED)
+            }.forEach { checkVisibleAndSetMarker(it.itemMarker, it.itemDistinction) }
+
+            if(isOn)
+                compoundButton.background = getDrawable(R.color.colorRedCloud)
+            else
+                compoundButton.background = getDrawable(R.color.transparency)
+        }
+    }
+    private fun setToggleButtonShelter(){
+        buttonShelterVisible.setOnCheckedChangeListener { compoundButton, isOn ->
+            val isTsunamiShelter = resources.getInteger(R.integer.TsunamiShelter)
+            val isMBWShelter = resources.getInteger(R.integer.MBWShelter)
+
+            itemsOnMap.filter {
+                listOf(
+                    resources.getInteger(R.integer.TsunamiShelter)
+                    , resources.getInteger(R.integer.MBWShelter)
+                ).contains(it.itemDistinction)
+            }.forEach { checkVisibleAndSetMarker(it.itemMarker, it.itemDistinction) }
+
+            if(isOn)
+                compoundButton.background = getDrawable(R.color.colorRedCloud)
+            else
+                compoundButton.background = getDrawable(R.color.transparency)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        functionCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when(functionCode){
+            STARTING -> {
+                if(PermissionManager.existDeniedpermission(this, permissions))
+                    toast("일부 기능이 제한될 수 있습니다.")
+            }
+            MOVE_TO_NOW_LOCATION -> {
+                if(!PermissionManager.existDeniedpermission(this, permissions))
+                    setMapToNowLocation()
+                else
+                    toast("권한이 허가되지 않아 기능을 이용할 수 없습니다.")
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+
+            R.id.apptuto ->{
+                startActivity(Intent(this, TutorialActivity::class.java))
+            }
+            R.id.howtool ->
+                startActivity(Intent(this, SelectionForEducation::class.java))
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setMapToNowLocation(){
@@ -245,42 +283,41 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun putMarkers(items: JSONArray, drawingMap: NaverMap){
-        for(nowOrder in 0 until items.length()) {
-            val nowItem = items[nowOrder] as JSONObject?;
-
-            nowItem?.let{
-                val latitude: Double
-                val longitude: Double
-
-                try {
-                    latitude = it.getDouble(getString(R.string.Latitude))
-                    longitude = it.getDouble(getString(R.string.Longitude))
-                }catch(e: JSONException){
-                    Log.d("putting Marker : ", "잘못된 위도-경도")
-                    return@let
-                }
-
-                val newMarker = Marker().apply{
-                    position = LatLng(latitude, longitude)
-                    map = drawingMap
-                    width = markerWidth
-                    height = markerHeight
-                    icon = OverlayImage.fromResource(R.drawable.aed)
-                }
-            }
-        }
-    }
-
     private fun putMarker(
         item: JSONObject
         , itemLatLng: LatLng
         , itemDistinction: Int
-        , drawingMap: NaverMap) = Marker().apply{
-            position = itemLatLng
-            map = drawingMap
-            width = markerWidth
-            height = markerHeight
-            icon = OverlayImage.fromResource(R.drawable.aed)
+        , drawingMap: NaverMap) = Marker().apply {
+
+        position = itemLatLng
+        map = drawingMap
+        width = markerWidth
+        height = markerHeight
+
+        checkVisibleAndSetMarker(this, itemDistinction)
+    }
+
+    private fun checkVisibleAndSetMarker(marker: Marker, distinction: Int){
+        val isAED = resources.getInteger(R.integer.AED)
+
+        val isTsunamiShelter = resources.getInteger(R.integer.TsunamiShelter)
+        val isMBWShelter = resources.getInteger(R.integer.MBWShelter)
+
+        var isVisible = when(distinction){
+            isAED -> buttonAEDVisible.isChecked
+            isTsunamiShelter, isMBWShelter -> buttonShelterVisible.isChecked
+            else -> false
         }
+
+        if(isVisible)
+            marker.icon = when(distinction)
+            {
+                isAED ->  OverlayImage.fromResource(R.drawable.aed_marker)
+                isTsunamiShelter -> OverlayImage.fromResource(R.drawable.tsunami_shelter_marker)
+                isMBWShelter -> OverlayImage.fromResource(R.drawable.mbw_shelter_marker)
+                else -> { Log.d("setMarkerImage", "잘못된 distinction : $distinction"); marker.icon }
+            }
+        else
+            marker.icon = OverlayImage.fromResource(R.drawable.transparent_pixel)
+    }
 }

@@ -3,17 +3,29 @@ package com.example.emergencymap
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationManager
+import android.location.LocationProvider
 import android.telephony.SmsManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.ContextCompat.startActivity
+import com.google.android.youtube.player.internal.i
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.LocationSource
+import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.style.sources.GeoJsonSource
 import kotlinx.android.synthetic.main.dialog_sms.view.*
+import org.jetbrains.anko.doAsync
 
 
 class EmergencyMenuClickListener(
+
     val groupSelection: ViewGroup
     , val activity: AppCompatActivity)
     : View.OnClickListener {
@@ -22,17 +34,18 @@ class EmergencyMenuClickListener(
         groupSelection.visibility = View.INVISIBLE
 
         when(nowSelectionView?.id){
-          R.id.buttonEmergencySMS -> sendEmergencySMS()
-          R.id.buttonEmergencyManual -> buttonEmergencyManual()
+            R.id.buttonEmergencySMS -> sendEmergencySMS()
+            R.id.buttonEmergencyManual -> buttonEmergencyManual()
         }
     }
 
     private fun sendEmergencySMS() {
         // 비상신고 기능
-
+        var locationSource : LocationProvider
         val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val builder = AlertDialog.Builder(activity)
         val dialogView = inflater.inflate(R.layout.dialog_sms, null)
+
 
         (activity as MainActivity)?.let {
             val case = arrayOf("심정지 환자","화재 사건","지진","해일")
@@ -53,7 +66,9 @@ class EmergencyMenuClickListener(
             selectionPatientStatus.onItemSelectedListener =
                 object: AdapterView.OnItemSelectedListener{
                     override fun onItemSelected(parent:AdapterView<*>, view: View, position: Int, id: Long){
-                        mainTv.setText("${parent.getItemAtPosition(position)} 발생했습니다.")
+
+
+                        mainTv.setText("${parent.getItemAtPosition(position)} 발생했습니다.\n" + "현재 위치 : ")
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>){}
@@ -63,7 +78,7 @@ class EmergencyMenuClickListener(
                 .setPositiveButton("신고") { dialogInterface, i ->
                     /* 확인일 때 main의 View의 값에 dialog View에 있는 값을 적용 */
                     var obj = SmsManager.getDefault()
-                    obj.sendTextMessage("01087751432", null, "${mainTv.text}", null, null)
+                    obj.sendTextMessage("01056590848", null, "${mainTv.text}", null, null)
 
                 }
                 .setNegativeButton("취소") { dialogInterface, i ->
@@ -98,8 +113,7 @@ class EmergencyMenuClickListener(
         }
 
         buttonFIRE1.setOnClickListener {
-            val intent = Intent(activity, EmergencyEducationList::class.java)
-            startActivity(activity, intent, null)
+
         }
 
         buttonFIRE2.setOnClickListener {
@@ -110,4 +124,7 @@ class EmergencyMenuClickListener(
 
         }
     }
+
+
+
 }
