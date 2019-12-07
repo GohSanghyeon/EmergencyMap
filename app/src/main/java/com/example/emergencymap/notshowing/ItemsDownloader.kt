@@ -14,11 +14,7 @@ import java.net.UnknownHostException
 
 data class Boundary(val east: Double, val west: Double, val south: Double, val north: Double)
 
-class ItemsDownloader(
-    private val boundary: Boundary
-    , private val context: Context
-    , private val doingWithItems: (JSONArray?) -> Unit
-) : AsyncTask<Void, Void, JSONArray?>()
+class ItemsDownloader(private val boundary: Boundary, private val context: Context, private val doingWithItems: (JSONArray?) -> Unit) : AsyncTask<Void, Void, JSONArray?>()
 {
     private var requestURLString = "http://15.164.116.17/items_in_area.php?" +
             "east=${boundary.east}&west=${boundary.west}" +

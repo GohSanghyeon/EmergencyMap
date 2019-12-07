@@ -29,20 +29,20 @@ class TutorialActivity : AppCompatActivity() {
         val edit = pref.edit()
         var flag : Int = 0
 
-       closeView.setOnClickListener {
-           if(checkbox.isChecked){
-               flag = CHECKED_NEVER_SHOW_TUTORIAL
-               edit.putInt("First", flag)
-               edit.apply()
-               finish()
-           }
-           else{
-               flag = UNCHECKED_NEVER_SHOW_TUTORIAL
-               edit.putInt("First", flag)
-               edit.apply()
-               finish()
-           }
-       }
+        closeView.setOnClickListener {
+            if(checkbox.isChecked){
+                flag = CHECKED_NEVER_SHOW_TUTORIAL
+                edit.putInt("First", flag)
+                edit.apply()
+                finish()
+            }
+            else{
+                flag = UNCHECKED_NEVER_SHOW_TUTORIAL
+                edit.putInt("First", flag)
+                edit.apply()
+                finish()
+            }
+        }
 
         buttonEmergency.setOnClickListener {
             tipView.text = "응급상황 버튼으로 119신고와 환자에 맞는 응급처치 절차를 볼 수 있습니다."
