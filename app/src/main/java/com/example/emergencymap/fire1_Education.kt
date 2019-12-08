@@ -1,10 +1,12 @@
 package com.example.emergencymap
 
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
@@ -31,9 +33,18 @@ class fire1_Education : AppCompatActivity() {
             val imgView = nowView.findViewById<ImageView>(R.id.viewEducationImage)
             val txtView = nowView.findViewById<TextView>(R.id.textDescription)
             val canvas = GlideDrawableImageViewTarget(imgView)
-
+            val nextBtn = nowView.findViewById<Button>(R.id.nbutton)
             txtView.text = textDescriptionsMASK[nowIndex]
-
+            if(nowIndex == imagesFIRE1.size-1){
+                nextBtn.visibility = View.VISIBLE
+            }
+            else{
+                nextBtn.visibility = View.INVISIBLE
+            }
+            nextBtn.setOnClickListener {
+                val intent  = Intent(this, fire2_Education::class.java)
+                startActivity(intent)
+            }
             Glide.with(applicationContext).load(idRawImage).into(canvas)
             viewList.add(nowView)
         }

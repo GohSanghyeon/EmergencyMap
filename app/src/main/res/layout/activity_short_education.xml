@@ -23,4 +23,11 @@
         android:layout_weight="1"
         android:textSize="20sp"
         tools:text="테스트용 텍스트" />
+
+    <Button
+        android:id="@+id/nbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="다음단계" />
 </LinearLayout>

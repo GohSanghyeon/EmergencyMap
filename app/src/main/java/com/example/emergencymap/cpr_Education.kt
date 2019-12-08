@@ -1,10 +1,12 @@
 package com.example.emergencymap
 
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
@@ -28,19 +30,27 @@ class cpr_Education : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_education_list)
-
+        lateinit var nextBtn : Button
         imagesCPR.forEachIndexed {nowIndex, idRawImage ->
             val nowView = layoutInflater.inflate(R.layout.activity_short_education, null)
+            nextBtn = nowView.findViewById<Button>(R.id.nbutton)
             val imgView = nowView.findViewById<ImageView>(R.id.viewEducationImage)
             val txtView = nowView.findViewById<TextView>(R.id.textDescription)
             val canvas = GlideDrawableImageViewTarget(imgView)
-
             txtView.text = textDescriptionsMASK[nowIndex]
-
             Glide.with(applicationContext).load(idRawImage).into(canvas)
             viewList.add(nowView)
+            if(nowIndex == imagesCPR.size-1){
+                nextBtn.visibility = View.VISIBLE
+            }
+            else{
+                nextBtn.visibility = View.INVISIBLE
+            }
+            nextBtn.setOnClickListener {
+                val intent  = Intent(this, EmergencyEducationList::class.java)
+                startActivity(intent)
+            }
         }
-
         pagerEducation.adapter = PagerEducationAdapter()
     }
 

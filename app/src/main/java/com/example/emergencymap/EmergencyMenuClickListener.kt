@@ -109,7 +109,7 @@ class EmergencyMenuClickListener(
                             startActivity(activity, intent, null)
                         }
                         2 -> {
-                            val intent = Intent(activity, mask_Education::class.java) //화재 진화
+                            val intent = Intent(activity, fire1_Education::class.java) //화재 진화
                             startActivity(activity, intent, null)
                         }
                     }
@@ -152,17 +152,17 @@ class EmergencyMenuClickListener(
         }
 
         buttonMASK.setOnClickListener {
-            val intent = Intent(activity, EmergencyEducationList::class.java)
+            val intent = Intent(activity, mask_Education::class.java)
             startActivity(activity, intent, null)
         }
 
         buttonFIRE1.setOnClickListener {//소화기
-            val intent = Intent(activity, cpr_Education::class.java)
+            val intent = Intent(activity, fire1_Education::class.java)
             startActivity(activity, intent, null)
         }
 
         buttonFIRE2.setOnClickListener {//소화전
-            val intent = Intent(activity, cpr_Education::class.java)
+            val intent = Intent(activity, fire2_Education::class.java)
             startActivity(activity, intent, null)
         }
 
