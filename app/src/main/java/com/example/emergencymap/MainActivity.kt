@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
@@ -33,8 +32,7 @@ import java.util.concurrent.ConcurrentHashMap
 val permissionUsing: Array<out String> = arrayOf(
     Manifest.permission.ACCESS_COARSE_LOCATION,
     Manifest.permission.ACCESS_FINE_LOCATION,
-    Manifest.permission.SEND_SMS,
-    Manifest.permission.READ_EXTERNAL_STORAGE
+    Manifest.permission.SEND_SMS
 )
     get() = field.clone()
 
@@ -74,7 +72,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         if(PermissionManager.existDeniedpermission(this, permissionUsing))
             PermissionManager.showOnlyRequestAnd(this, permissionUsing, STARTING,
                 "어플리케이션의 기능을 정상적으로 사용하기 위해 " +
-                        "위치 조회, SMS, 파일 읽기권한이 필요합니다.")
+                        "위치 조회, SMS권한이 필요합니다.")
             { _, _ ->
                 toast("일부 기능이 제한될 수 있습니다.")
             }
@@ -403,7 +401,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun setOfflineSave(){
         buttonSaveFromMap.setOnClickListener {
-            databaseForOffline.doSomething(itemsOnMap)
+            databaseForOffline.refreshOfflineItems(itemsOnMap)
         }
     }
 

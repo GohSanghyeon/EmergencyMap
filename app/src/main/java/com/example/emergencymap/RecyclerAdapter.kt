@@ -2,16 +2,12 @@
 
 package com.example.emergencymap
 
-import android.content.Context
 import android.content.Intent
-import android.system.Os.bind
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.youtube.player.internal.v
 import kotlinx.android.synthetic.main.list_item.view.*
 
 class RecyclerAdapter(private val items: ArrayList<YoutubeItem>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
@@ -25,10 +21,12 @@ class RecyclerAdapter(private val items: ArrayList<YoutubeItem>) : RecyclerView.
             val intent = Intent(it.context, HowToWithYoutube::class.java)
 
             intent.putExtra(HowToWithYoutube.ITEM_IS, when(position){
-                0 -> HowToWithYoutube.AED
-                1 -> HowToWithYoutube.GASMASK
-                2 -> HowToWithYoutube.FIREITEM
-                3 -> HowToWithYoutube.WATERITEM
+                0 -> HowToWithYoutube.CPR
+                1 -> HowToWithYoutube.AED
+                2 -> HowToWithYoutube.FIRE_EXTINGUISHER
+                3 -> HowToWithYoutube.FIREPUMP
+                4 -> HowToWithYoutube.GASMASK
+                5 -> HowToWithYoutube.WATERITEM
                 else -> HowToWithYoutube.AED
             })
 

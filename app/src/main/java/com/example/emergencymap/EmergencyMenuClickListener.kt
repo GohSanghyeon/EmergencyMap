@@ -53,18 +53,25 @@ class EmergencyMenuClickListener(
         (activity as? MainActivity)?.let { mainActivity ->
             val editorSending = dialogView.findViewById<EditText>(R.id.editorSMSContents)
 
-            mainActivity.locationSource
-                .requestNowLocation(LocationProvider.OMIT_PERMISSION_CHECK_AND_CANCEL){ nowLocation ->
-                    nowLocation?.let { nowLocation ->
-                        messageNowLocation = "현재 위치 : (${nowLocation.latitude}, ${nowLocation.longitude})\n"
+            if(!PermissionManager.existDeniedpermission(activity, LocationProvider.permissionForLocation))
+                mainActivity.locationSource
+                    .requestNowLocation(LocationProvider.OMIT_PERMISSION_CHECK_AND_CANCEL)
+                    { nowLocation ->
+                        nowLocation?.let { nowLocation ->
+                            messageNowLocation =
+                                "현재 위치 : (${nowLocation.latitude}, ${nowLocation.longitude})\n"
 
-                        editorSending?.setText(
-                            String.format("%s%s", messageNowLocation, editorSending.text))
-                    } ?: activity.toast("현재위치 받아오기 실패")
+                            editorSending?.setText(
+                                String.format("%s%s", messageNowLocation, editorSending.text))
+                        } ?: activity.toast("현재위치 받아오기 실패")
 
-                    dialogView.findViewById<ProgressBar>(R.id.progressLocation).visibility = View.GONE
-                    dialogView.findViewById<TextView>(R.id.textLocationCancel).visibility = View.GONE
-                }
+                        dialogView.findViewById<ProgressBar>(R.id.progressLocation).visibility = View.GONE
+                        dialogView.findViewById<TextView>(R.id.textLocationCancel).visibility = View.GONE
+                    }
+            else{
+                dialogView.findViewById<ProgressBar>(R.id.progressLocation).visibility = View.GONE
+                dialogView.findViewById<TextView>(R.id.textLocationCancel).visibility = View.GONE
+            }
 
             val case = arrayOf("심정지 환자","화재 사건")
 

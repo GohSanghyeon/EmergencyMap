@@ -7,10 +7,12 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
 
-    <string name="title1">1. 자동제세동기 </string>
-    <string name="title2">2. 방독면 </string>
-    <string name="title3">3. 소화전 </string>
-    <string name="title4">4. 해상구조용품 </string>
+    <string name="title1">심폐소생술 </string>
+    <string name="title2">자동제세동기 </string>
+    <string name="title3">소화기 </string>
+    <string name="title4">소화전 </string>
+    <string name="title5">방독면 </string>
+    <string name="title6">해상구조용품 </string>
 
     <string name="tutorial_introduction">
         궁금한 위젯을 클릭하여\n
