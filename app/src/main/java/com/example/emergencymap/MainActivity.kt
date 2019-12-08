@@ -1,18 +1,24 @@
 package com.example.emergencymap
 
 import android.Manifest
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
+import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
 import com.example.emergencymap.notshowing.Boundary
 import com.example.emergencymap.notshowing.ItemsDownloader
 import com.example.emergencymap.notshowing.LocationProvider
+import com.example.emergencymap.notshowing.myDBHelper
+import com.google.android.youtube.player.internal.i
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.InfoWindow
@@ -97,6 +103,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         setToggleButtonEmergencyRoom()
         setToggleButtonPharmacy()
         setEmergencyButton()
+        setOfflineSave()
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -391,6 +398,47 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             else
                 compoundButton.background = getDrawable(R.color.transparency)
         }
+    }
+
+    private fun setOfflineSave(){
+
+     //   val myHelper = myDBHelper(this)
+      //  var sqlDB : SQLiteDatabase = myHelper.writableDatabase
+        //myHelper.onUpgrade(sqlDB, 1, 2)
+
+
+        buttonSaveFromMap.setOnClickListener {
+            var itemInfo: ItemInfo? = null
+            val Kno = resources.getString(R.string.ItemNo)
+            val Kdistictiion = resources.getString(R.string.Distinction)
+            val Kaddress = resources.getString(R.string.BuildAddress)
+            val KdetailAddress = resources.getString(R.string.DetailedPlace)
+            val KmTel = resources.getString(R.string.ManagerTel)
+
+            if (itemInfo != null) {
+                Toast.makeText(this, "${itemInfo.itemAttributes[Kno]}", Toast.LENGTH_LONG).show()
+            }
+/*
+            sqlDB.execSQL("INSERT INTO saveinfo VALUES('"
+                    + Kno+"','"
+                    +Kdistictiion+"','"
+                    +Kaddress +"','"
+                    +KdetailAddress+"','"
+                    +KmTel+"');")
+            Toast.makeText(this, "위치가 저장되었습니다", Toast.LENGTH_SHORT).show()
+
+ */
+        }
+    }
+
+    private fun delDB(){
+        val myHelper = myDBHelper(this)
+        var sqlDB : SQLiteDatabase = myHelper.readableDatabase
+        myHelper.onUpgrade(sqlDB, 1, 2)
+        var cursor : Cursor
+        cursor = sqlDB.rawQuery("DROP TABLE voca;", null)
+        cursor.close()
+        sqlDB.close()
     }
 
     private fun setToggleButtonPharmacy(){
