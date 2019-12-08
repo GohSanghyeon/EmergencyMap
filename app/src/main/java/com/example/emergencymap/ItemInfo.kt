@@ -13,5 +13,16 @@ class ItemInfo(itemNo:Int, latitude: Double, longitude: Double, distinction: Int
     val itemDistinction = distinction
     val itemMarker = marker
 
-    private val itemInfo = info
+    var itemAttributes: Map<String, String>
+        private set
+
+    init{
+        val infoMap = mutableMapOf<String, String>()
+
+        info.keys().forEach { nowKey ->
+            infoMap[nowKey] = info.getString(nowKey)
+        }
+
+        itemAttributes = infoMap
+    }
 }

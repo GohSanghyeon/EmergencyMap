@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_square_whiteframe"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textItemTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/view_item_detail_info_avg_padding"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:text="AED" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textItemAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="300dp"
+        android:maxLines="3"
+        android:minWidth="150dp"
+        android:padding="@dimen/view_item_detail_info_avg_padding"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        tools:text="주소 : 서울특별시 어딘가" />
+
+    <TextView
+        android:id="@+id/textItemDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="250dp"
+        android:maxLines="3"
+        android:minWidth="150dp"
+        android:padding="@dimen/view_item_detail_info_avg_padding"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        tools:text="무슨공원" />
+
+    <TextView
+        android:id="@+id/textItemManagerTel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/view_item_detail_info_avg_padding"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        tools:text="관리자 Tel.02-777-7777" />
+</LinearLayout>

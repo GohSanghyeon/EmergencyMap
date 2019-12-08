@@ -3,12 +3,10 @@ package com.example.emergencymap
 import android.Manifest
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
 import android.content.Intent
+import android.graphics.Color
 import android.util.Log
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.annotation.UiThread
 import androidx.core.view.isVisible
 import androidx.core.view.iterator
@@ -21,6 +19,7 @@ import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.util.MarkerIcons
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
 import org.json.JSONArray
@@ -43,6 +42,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val regionsOnMap: ConcurrentHashMap<String, RegionInfo> = ConcurrentHashMap()
     private val regionInfoWindows: MutableList<InfoWindow> = mutableListOf()
+    private var itemDetailInfoWindow: InfoWindow? = null
 
     private var isItemMarkerZoomLevel = true
     private var wasItemMarkerZoomLevel = true
@@ -90,11 +90,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        setItemInfoWindow()
+
         setToggleButtonAED()
         setToggleButtonShelter()
         setToggleButtonEmergencyRoom()
         setToggleButtonPharmacy()
         setEmergencyButton()
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        
+
+        itemDetailInfoWindow?.let {
+            if(it.isAdded)
+                it.close()
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     private fun checkShowingTutorial() {
@@ -192,21 +204,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                     } == 0
 
                                     if (isNewItem) {
-                                        itemsOnMap.add(
-                                            ItemInfo(
-                                                nowItemNo
-                                                , nowItemLatitude
-                                                , nowItemLongitude
+                                        val newItemInfo = ItemInfo(
+                                            nowItemNo
+                                            , nowItemLatitude
+                                            , nowItemLongitude
+                                            , nowItemDistinction
+                                            , nowItem
+                                            , putMarker(
+                                                nowItemLatLng
                                                 , nowItemDistinction
-                                                , nowItem
-                                                , putMarker(
-                                                    nowItem,
-                                                    nowItemLatLng,
-                                                    nowItemDistinction,
-                                                    map
-                                                )
+                                                , map
                                             )
                                         )
+
+                                        setItemClickListener(newItemInfo)
+
+                                        itemsOnMap.add(newItemInfo)
                                     }
                                 }
                             }
@@ -215,6 +228,31 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 taskDownload.execute()
             }
+        }
+    }
+
+    private fun setItemClickListener(itemInfo: ItemInfo) {
+        val newItemMarker = itemInfo.itemMarker
+        itemInfo.itemMarker.setOnClickListener {
+            runOnUiThread {
+                itemDetailInfoWindow?.let{ itemInfoWindow ->
+                    if(itemInfoWindow.isAdded && itemInfoWindow.marker == newItemMarker){
+                        itemInfoWindow.close()
+                        return@runOnUiThread
+                    }
+                    else if(itemInfoWindow.isAdded)
+                        itemInfoWindow.close()
+
+                    val nowInfoWindowAdapter = itemInfoWindow.adapter
+                    if(nowInfoWindowAdapter is ItemDetailInfoWindowAdapter) {
+                        nowInfoWindowAdapter.itemInfo = itemInfo
+                        itemInfoWindow.open(newItemMarker)
+                    }
+
+                    map?.moveCamera(CameraUpdate.scrollTo(newItemMarker.position))
+                }
+            }
+            true
         }
     }
 
@@ -273,6 +311,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         if(layoutEmergencySelection is ViewGroup)
             for(menuItem in layoutEmergencySelection)
                 menuItem.setOnClickListener(EmergencyMenuClickListener(layoutEmergencySelection as ViewGroup, this))
+    }
+
+    private fun setItemInfoWindow() {
+        itemDetailInfoWindow = InfoWindow().apply {
+            adapter = ItemDetailInfoWindowAdapter(this@MainActivity)
+        }
     }
 
     private fun setToggleButtonAED(){
@@ -419,8 +463,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun putMarker(
-        item: JSONObject
-        , itemLatLng: LatLng
+        itemLatLng: LatLng
         , itemDistinction: Int
         , drawingMap: NaverMap) = Marker().apply {
 
@@ -506,5 +549,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         tag = regionName
         width = markerWidth
         height = markerHeight
+        icon = MarkerIcons.BLACK
+        iconTintColor = Color.RED
     }
 }
