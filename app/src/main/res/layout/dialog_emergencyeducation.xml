@@ -9,6 +9,7 @@
         android:id="@+id/textDialogueTitle"
         android:layout_width="match_parent"
         android:layout_height="43dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
         android:text="응급 교육"
         android:textColor="#FF0000"
@@ -18,36 +19,36 @@
         android:id="@+id/buttonCPR"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_square_whiteselction"
+        android:background="@drawable/rounded_square_whiteframe"
         android:text="CPR (심폐소생술)" />
 
     <Button
         android:id="@+id/buttonAED"
-        android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_square_whiteselction"
-        android:text="응급교육" />
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/rounded_square_whiteframe"
+        android:text="AED (자동제세동기)" />
 
     <Button
         android:id="@+id/buttonMASK"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_square_whiteselction"
+        android:background="@drawable/rounded_square_whiteframe"
         android:text="방독면 사용법" />
 
     <Button
         android:id="@+id/buttonFIRE1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_square_whiteselction"
+        android:background="@drawable/rounded_square_whiteframe"
         android:text="소화기 사용법" />
 
     <Button
         android:id="@+id/buttonFIRE2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_square_whiteselction"
+        android:background="@drawable/rounded_square_whiteframe"
         android:text="소화전 사용법" />
 
 

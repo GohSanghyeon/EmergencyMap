@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="instructionAED">
+        <item>1.AED를 열어 전원을 누릅니다.</item>
+        <item>2. 봉투를 열어 패드를 꺼내고 분리해줍니다.</item>
+        <item>3. 패드를 다음과 같이 환자에게 부착합니다.</item>
+    </string-array>
+
+    <string-array name="instructionCPR">
+        <item>1. 환자의 의식을 확인 후 119에 신고하십시오.</item>
+        <item>2. 주변의 사람들에게 자동 심장 충격기(AED)를 찾아달라고 부탁하십시오.</item>
+        <item>3. 손에 깍지를 끼고 손꿈치 부분으로 환자의 흉부를 압박하십시오.</item>
+        <item>4. 분당 100~120회 약 5cm깊이로 압박하십시오.</item>
+        <item>5. 팔꿈치는 수직을 유지하십시오.</item>
+        <item>6. 환자가 의식을 회복하거나 119구급대원이 도착할 때까지 반복하십시오.</item>
+    </string-array>
+
+    <string-array name="instructionFireExtinguisher">
+        <item>1. 소화전 덮개를 열어 소화기를 꺼내십시오.</item>
+        <item>2. 소화기의 안전핀을 제거하십시오.</item>
+        <item>3. 소화기의 노즐을 화재 발생 부위로 조정하여 손잡이를 눌러 분사하십시오.</item>
+    </string-array>
+
+    <string-array name="instructionFirePump">
+        <item>1. 발신기의 비상벨을 눌러 화재 사실을 알리십시오.</item>
+        <item>2. 소화전함을 열어 노즐과 호스를 화재 발생지점으로 이동하십시오.</item>
+        <item>3. 호스 전개 시 꼬이지 않도록 하십시오.</item>
+        <item>4. 벨브를 왼쪽으로 돌려 개방하십시오.</item>
+        <item>5. 노즐을 왼쪽으로 돌려 화재 발생지점에 방수하여 화재를 진압하십시오.</item>
+    </string-array>
+
+    <string-array name="instructionGasMask">
+        <item>1.휴대주머니를 열어 포장된 방독면과 정화통을 꺼냅니다.</item>
+        <item>2. 포장된 방독면의 은박포장과 정화통의 은박포장을 제거하십시오.</item>
+        <item>3. 정화통 마개를 제거하고 시계방향으로 돌려 방독면에 장착하십시오.</item>
+        <item>4. 방독면을 장착한 후 흡입막을 제거하십시오.</item>
+        <item>5. 렌즈쪽을 아래로 향하도록 잡고, 방독면을 안전하게 착용하십시오.</item>
+        <item>6. 방독면을 착용한 후에 얼굴에 밀착 되도록 머리끈을 조절하고 내부 목조임끈을 조이십시오.</item>
+        <item>7. 정화통의 공기 흡입구를 손바닥으로 막고 숨을 길게 들이마셔 안면부가 얼굴에 밀착되는지 확인하십시오.</item>
+    </string-array>
+</resources>

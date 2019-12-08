@@ -1,23 +1,21 @@
 package com.example.emergencymap
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget
 import kotlinx.android.synthetic.main.activity_education_list.*
+import org.jetbrains.anko.startActivity
 import kotlin.collections.ArrayList
-import kotlinx.android.synthetic.main.dialog_emergencyeducation.*
-import java.util.*
 
 class EmergencyEducationList : AppCompatActivity() {
     lateinit var tts : TextToSpeech
@@ -68,20 +66,76 @@ class EmergencyEducationList : AppCompatActivity() {
             }
         }
 
-        nowImageId.forEachIndexed { nowIndex, idRawImage ->
-            val nowView = layoutInflater.inflate(R.layout.activity_short_education, null)
-            val imgView = nowView.findViewById<ImageView>(R.id.viewEducationImage)
-            val txtView = nowView.findViewById<TextView>(R.id.textDescription)
-            val canvas = GlideDrawableImageViewTarget(imgView)
+        val nowViews = arrayOfNulls<View>(nowImageId.size)
 
-            //val nextBtn = nowView.findViewById<Button>(R.id.nbutton)
-            //nextBtn.visibility = View.INVISIBLE
-            txtView.text = resources.getStringArray(nowDescription)[nowIndex]
-            Glide.with(applicationContext).load(idRawImage).into(canvas)
-            viewList.add(nowView)
+        nowImageId.forEachIndexed { nowIndex, idRawImage ->
+            nowViews[nowIndex] = layoutInflater.inflate(R.layout.view_short_education, null)
+            nowViews[nowIndex]?.let { nowView ->
+                val imgView = nowView.findViewById<ImageView>(R.id.viewEducationImage)
+                val txtView = nowView.findViewById<TextView>(R.id.textDescription)
+                val canvas = GlideDrawableImageViewTarget(imgView)
+
+                txtView.text = resources.getStringArray(nowDescription)[nowIndex].toString()
+                Log.d("현재 텍스트", resources.getStringArray(nowDescription)[nowIndex])
+                Glide.with(applicationContext).load(idRawImage).into(canvas)
+                viewList.add(nowView)
+            }
         }
 
-        pagerEducation.adapter = PagerEducationAdapter()
+        val buttonsEducationIndex
+                = nowViews.last()?.findViewById<LinearLayout>(R.id.layoutEducationIndex)
+
+        buttonsEducationIndex?.let { allButtons ->
+            allButtons.visibility = View.VISIBLE
+            allButtons.findViewById<Button>(R.id.buttonOutEmergencyEducation)
+                ?.setOnClickListener { finish() }
+
+            allButtons.findViewById<Button>(R.id.buttonGoToFirstPage)
+                ?.setOnClickListener { pagerEducation.currentItem = 0 }
+
+            val buttonNextContents = allButtons.findViewById<Button>(R.id.buttonNextContents)
+            when(nowContents){
+                AED -> {
+                    buttonNextContents.text = "심폐소생술"
+                    buttonNextContents.setOnClickListener {
+                        finish()
+                        startActivity<EmergencyEducationList>(
+                            KEY_CONTENTS to CPR
+                        )
+                    }
+                }
+                CPR -> {
+                    buttonNextContents.text = "제세동기 사용법"
+                    buttonNextContents.setOnClickListener {
+                        finish()
+                        startActivity<EmergencyEducationList>(
+                            KEY_CONTENTS to AED
+                        )
+                    }
+                }
+                FIRE_EXTINGUISHER -> {
+                    buttonNextContents.text = "소화전"
+                    buttonNextContents.setOnClickListener {
+                        finish()
+                        startActivity<EmergencyEducationList>(
+                            KEY_CONTENTS to FIRE_PUMP
+                        )
+                    }
+                }
+                FIRE_PUMP -> {
+                    buttonNextContents.text = "소화기"
+                    buttonNextContents.setOnClickListener {
+                        finish()
+                        startActivity<EmergencyEducationList>(
+                            KEY_CONTENTS to FIRE_EXTINGUISHER
+                        )
+                    }
+                }
+                GAS_MASK -> buttonNextContents.visibility = View.GONE
+            }
+
+            pagerEducation.adapter = PagerEducationAdapter()
+        }
     }
 
     private inner class PagerEducationAdapter : PagerAdapter() {
