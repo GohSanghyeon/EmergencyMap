@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/howtool"
-        android:title="구조 용품 사용법"
+        android:title="구조 용품 사용법 영상"
         android:orderInCategory="100"
         app:showAsAction="never" />
     <item

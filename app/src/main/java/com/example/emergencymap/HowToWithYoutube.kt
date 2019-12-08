@@ -42,17 +42,19 @@ class HowToWithYoutube : YouTubeBaseActivity() {
     private fun initUI() {
         youtubePlayerInit = object :YouTubePlayer.OnInitializedListener{
             override fun onInitializationSuccess(p0: YouTubePlayer.Provider?, youTubePlayer: YouTubePlayer, p2: Boolean){
-                 youTubePlayer.loadVideo(VIDEO_ID[itemIs].second)
-                youTubePlayer.setOnFullscreenListener { youTubePlayer.setFullscreen(false) }
+                youTubePlayer.loadVideo(VIDEO_ID[itemIs].second)
+                val style = YouTubePlayer.PlayerStyle.MINIMAL
+                youTubePlayer.setPlayerStyle(style)
+                youTubePlayer.setOnFullscreenListener {youTubePlayer.setFullscreen(true) }
             }
-                   // = youTubePlayer.loadVideo(VIDEO_ID[itemIs].second)
+            // = youTubePlayer.loadVideo(VIDEO_ID[itemIs].second)
 
             override fun onInitializationFailure(p0: YouTubePlayer.Provider?, p1: YouTubeInitializationResult?) {
                 Toast.makeText(applicationContext, "something went wrong", Toast.LENGTH_SHORT).show()
             }
 
         }
-       playaedvideo.setOnClickListener { _ ->
+        playaedvideo.setOnClickListener { _ ->
             youtube_view.initialize(YOUTUBE_API_KEY, youtubePlayerInit)
 
         }

@@ -147,7 +147,8 @@
                 android:background="@color/transparency"
                 android:padding="@dimen/button_general_padding"
                 android:textOff="AED"
-                android:textOn="AED" />
+                android:textOn="AED"
+                android:textSize="16sp" />
 
             <View
                 android:id="@+id/divider1"
@@ -162,7 +163,8 @@
                 android:layout_weight="1"
                 android:background="@color/transparency"
                 android:textOff="대피소"
-                android:textOn="대피소" />
+                android:textOn="대피소"
+                android:textSize="16sp" />
 
             <View
                 android:id="@+id/divider2"
@@ -171,13 +173,14 @@
                 android:background="@android:color/black" />
 
             <ToggleButton
-                android:id="@+id/buttonFireplugVisible"
+                android:id="@+id/buttonEmergencyRoomVisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/transparency"
-                android:textOff="소화전"
-                android:textOn="소화전" />
+                android:textOff="응급실"
+                android:textOn="응급실"
+                android:textSize="16sp" />
 
             <View
                 android:id="@+id/divider3"
@@ -186,14 +189,14 @@
                 android:background="@android:color/black" />
 
             <ToggleButton
-                android:id="@+id/buttonWaterEquipVisible"
+                android:id="@+id/buttonPharmaciesVisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/transparency"
-                android:textOff="해상구조용품"
-                android:textOn="해상구조용품"
-                android:textSize="11sp" />
+                android:textOff="약국"
+                android:textOn="약국"
+                android:textSize="16sp" />
 
             <View
                 android:id="@+id/divider4"
@@ -203,45 +206,5 @@
         </TableRow>
 
     </TableLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/rounded_square_whitecloud"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="맵 영역(테스트용)" />
-
-        <TextView
-            android:id="@+id/textTestEast"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="맵 동단 :" />
-
-        <TextView
-            android:id="@+id/textTestWest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="맵 서단 :" />
-
-        <TextView
-            android:id="@+id/textTestSouth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="맵 남단 :" />
-
-        <TextView
-            android:id="@+id/textTestNorth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="맵 북단 :" />
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

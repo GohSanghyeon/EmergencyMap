@@ -1,5 +1,3 @@
-
-
 package com.example.emergencymap
 
 import android.content.Context
@@ -23,23 +21,16 @@ class RecyclerAdapter(private val items: ArrayList<YoutubeItem>) : RecyclerView.
 
         val listener = View.OnClickListener {
             val intent = Intent(it.context, HowToWithYoutube::class.java)
-            if(position == 0){
-                intent.putExtra(HowToWithYoutube.ITEM_IS, HowToWithYoutube.AED)
-                startActivity(it.context, intent, null)
 
-            }
-            if(position == 1){
-                intent.putExtra(HowToWithYoutube.ITEM_IS, HowToWithYoutube.GASMASK)
-                startActivity(it.context, intent, null)
-            }
-            if(position == 2){
-                intent.putExtra(HowToWithYoutube.ITEM_IS, HowToWithYoutube.FIREITEM)
-                startActivity(it.context, intent, null)
-            }
-            if(position == 3){
-                intent.putExtra(HowToWithYoutube.ITEM_IS, HowToWithYoutube.WATERITEM)
-                startActivity(it.context, intent, null)
-            }
+            intent.putExtra(HowToWithYoutube.ITEM_IS, when(position){
+                0 -> HowToWithYoutube.AED
+                1 -> HowToWithYoutube.GASMASK
+                2 -> HowToWithYoutube.FIREITEM
+                3 -> HowToWithYoutube.WATERITEM
+                else -> HowToWithYoutube.AED
+            })
+
+            startActivity(it.context, intent, null)
         }
 
         holder.apply {
@@ -48,25 +39,19 @@ class RecyclerAdapter(private val items: ArrayList<YoutubeItem>) : RecyclerView.
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
-            RecyclerAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflatedView = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_item, parent, false)
-        return RecyclerAdapter.ViewHolder(inflatedView)
+        return ViewHolder(inflatedView)
     }
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-
         private var view: View = v
         fun bind(listener: View.OnClickListener, item: YoutubeItem) {
             view.thumbnail.setImageDrawable(item.image)
             view.title.text = item.title
             view.setOnClickListener(listener)
-
         }
-
-
-
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -74,4 +59,3 @@ class RecyclerAdapter(private val items: ArrayList<YoutubeItem>) : RecyclerView.
     }
 
 }
-

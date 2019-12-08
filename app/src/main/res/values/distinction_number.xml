@@ -3,4 +3,6 @@
     <integer name="AED">100</integer>
     <integer name="TsunamiShelter">200</integer>
     <integer name="MBWShelter">210</integer>    //민방위
+    <integer name="EmergencyRoom">300</integer>
+    <integer name="Pharmacy">400</integer>
 </resources>

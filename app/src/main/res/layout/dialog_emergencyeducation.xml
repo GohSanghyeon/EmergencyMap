@@ -16,10 +16,11 @@
 
     <Button
         android:id="@+id/buttonAED"
+        android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_square_whiteselction"
-        android:text="AED (자동제세동기)" />
+        android:text="응급교육" />
 
     <Button
         android:id="@+id/buttonMASK"

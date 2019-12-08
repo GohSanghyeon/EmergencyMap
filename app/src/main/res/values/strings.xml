@@ -13,6 +13,10 @@
 
     <string name="tutorial_introduction">
         궁금한 위젯을 클릭하여\n
-        어떤 기능을 제공해주는지 알아보세요.
-    </string>
+        어떤 기능을 제공해주는지 알아보세요.</string>
+
+
+    <string name="textAED1">1.AED를 열어 전원을 누릅니다.</string>
+    <string name="textAED2">2. 봉투를 열어 패드를 꺼내고 분리해줍니다.</string>
+    <string name="textAED3">3. 패드를 다음과 같이 환자에게 부착합니다.</string>
 </resources>

@@ -12,6 +12,7 @@ import android.provider.Settings
 import android.util.Log
 import com.example.emergencymap.PermissionManager
 import com.google.android.gms.location.*
+import com.naver.maps.geometry.LatLng
 import org.jetbrains.anko.toast
 
 class LocationProvider(private val appContext : Context) {
@@ -29,6 +30,7 @@ class LocationProvider(private val appContext : Context) {
 
     private inner class OnlyForOneLocation(
         private val locationProvider: FusedLocationProviderClient
+
         , private val callbackWithNewLocation: ((Location?) -> Unit)? = null
     ) : LocationCallback() {
 
@@ -124,4 +126,5 @@ class LocationProvider(private val appContext : Context) {
 
         builder.show()
     }
+
 }
