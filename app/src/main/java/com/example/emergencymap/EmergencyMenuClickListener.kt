@@ -46,8 +46,9 @@ class EmergencyMenuClickListener(
         val builder = AlertDialog.Builder(activity)
         val dialogView = inflater.inflate(R.layout.dialog_sms, null)
 
+        (activity as MainActivity)?.let { mainActivity ->
+            //mainActivity.locationSource.requestNowLocation(MainActivity)
 
-        (activity as MainActivity)?.let {
             val case = arrayOf("심정지 환자","화재 사건","지진","해일")
 
             val adapter = ArrayAdapter(
@@ -66,8 +67,6 @@ class EmergencyMenuClickListener(
             selectionPatientStatus.onItemSelectedListener =
                 object: AdapterView.OnItemSelectedListener{
                     override fun onItemSelected(parent:AdapterView<*>, view: View, position: Int, id: Long){
-
-
                         mainTv.setText("${parent.getItemAtPosition(position)} 발생했습니다.\n" + "현재 위치 : ")
                     }
 
@@ -83,8 +82,7 @@ class EmergencyMenuClickListener(
                 }
                 .setNegativeButton("취소") { dialogInterface, i ->
                     /* 취소일 때 아무 액션이 없으므로 빈칸 */
-                }
-                .show()
+                }.show()
         }
     }
 

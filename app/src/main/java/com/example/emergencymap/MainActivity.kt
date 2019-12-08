@@ -36,7 +36,8 @@ val permissionUsing: Array<out String> = arrayOf(
     get() = field.clone()
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
-    private lateinit var locationSource: LocationProvider
+    lateinit var locationSource: LocationProvider
+        private set
     private var map: NaverMap? = null
     private var itemsOnMap: MutableList<ItemInfo> = mutableListOf()
 
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         //for permission check
         private const val STARTING = 10000
         private const val MOVE_TO_NOW_LOCATION = 10001
+        private const val SEND_SMS_WITH_NOW_LOCATION = 10002
 
         const val ITEMS_NUMBERS_OF_REGIONS = "Items numbers of Regions"
 
@@ -100,7 +102,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        
+
 
         itemDetailInfoWindow?.let {
             if(it.isAdded)
