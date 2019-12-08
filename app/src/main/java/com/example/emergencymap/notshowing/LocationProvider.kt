@@ -25,6 +25,9 @@ class LocationProvider(private val appContext : Context) {
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
+
+        //for requestNowLocation - function code
+        const val OMIT_PERMISSION_CHECK_AND_CANCEL = 0
     }
 
     private inner class OnlyForOneLocation(
@@ -65,10 +68,10 @@ class LocationProvider(private val appContext : Context) {
     }
 
     fun requestNowLocation(
-        functionCode: Int
+        functionCode: Int = OMIT_PERMISSION_CHECK_AND_CANCEL
         , doingWithNewLocation: ((Location?) -> Unit)? = null
     ){
-        val nowActivity: Activity = appContext as Activity
+        val nowActivity: Activity? = appContext as? Activity
         if(nowActivity != null)             //If invoker is in activity
             nowActivity.let {
                 if(!isOnDeviceLocationSetting()) {
@@ -76,7 +79,12 @@ class LocationProvider(private val appContext : Context) {
                     return
                 }
 
-                if (PermissionManager.existDeniedpermission(it, permissionForLocation)) {
+                else if (PermissionManager.existDeniedpermission(it, permissionForLocation)) {
+                    if(functionCode == OMIT_PERMISSION_CHECK_AND_CANCEL){
+                        it.toast("권한이 없어 현재 위치를 조회할 수 없습니다.")
+                        return
+                    }
+
                     PermissionManager.showOnlyRequestAnd(
                         it, permissionForLocation, functionCode
                         , "현재 위치를 파악하려면 위치 조회 권한이 필요합니다."

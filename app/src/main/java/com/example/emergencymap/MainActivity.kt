@@ -482,10 +482,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 if(!PermissionManager.existDeniedpermission(this, permissions))
                     setMapToNowLocation()
                 else
-                    toast("권한이 허가되지 않아 기능을 이용할 수 없습니다.")
+                    toast("권한이 허가되지 않아 위치 탐색 기능을 이용할 수 없습니다.")
             }
             SEND_SMS_WITH_NOW_LOCATION -> {
-                println("호출")
+                if(!PermissionManager.existDeniedpermission(this
+                        , EmergencyMenuClickListener.permissionForSMS))
+                    setMapToNowLocation()
+                else
+                    toast("권한이 허가되지 않아 비상신고 기능을 이용할 수 없습니다.")
             }
         }
     }

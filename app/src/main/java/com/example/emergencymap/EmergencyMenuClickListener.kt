@@ -1,5 +1,6 @@
 package com.example.emergencymap
 
+import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
+import com.example.emergencymap.notshowing.LocationProvider
 import kotlinx.android.synthetic.main.dialog_sms.view.*
 import org.jetbrains.anko.toast
 
@@ -19,12 +21,22 @@ class EmergencyMenuClickListener(
     , private val activity: AppCompatActivity)
     : View.OnClickListener {
 
+    companion object{
+        val permissionForSMS: Array<out String> = arrayOf(
+            Manifest.permission.SEND_SMS
+        )
+    }
+
     var setting :Int = 0
     override fun onClick(nowSelectionView: View?) {
         groupSelection.visibility = View.INVISIBLE
 
         when(nowSelectionView?.id){
-            R.id.buttonEmergencySMS -> sendEmergencySMS()
+            R.id.buttonEmergencySMS ->
+                if (PermissionManager.existDeniedpermission(activity, permissionForSMS))
+                    requestSMSPermission()
+                else
+                    sendEmergencySMS()
             R.id.buttonEmergencyManual -> buttonEmergencyManual()
         }
     }
@@ -42,11 +54,11 @@ class EmergencyMenuClickListener(
             val editorSending = dialogView.findViewById<EditText>(R.id.editorSMSContents)
 
             mainActivity.locationSource
-                .requestNowLocation(MainActivity.SEND_SMS_WITH_NOW_LOCATION){ nowLocation ->
+                .requestNowLocation(LocationProvider.OMIT_PERMISSION_CHECK_AND_CANCEL){ nowLocation ->
                     nowLocation?.let { nowLocation ->
                         messageNowLocation = "현재 위치 : (${nowLocation.latitude}, ${nowLocation.longitude})\n"
 
-                        editorSending.setText(
+                        editorSending?.setText(
                             String.format("%s%s", messageNowLocation, editorSending.text))
                     } ?: activity.toast("현재위치 받아오기 실패")
 
@@ -91,7 +103,6 @@ class EmergencyMenuClickListener(
                             val intent = Intent(activity, EmergencyEducationList::class.java)
                             startActivity(activity, intent, null)
                         }
-
                         1 ->{
                             val intent = Intent(activity, EmergencyEducationList::class.java)
                             startActivity(activity, intent, null)
@@ -102,6 +113,16 @@ class EmergencyMenuClickListener(
                 .setNegativeButton("취소") { dialogInterface, i ->
                     /* 취소일 때 아무 액션이 없으므로 빈칸 */
                 }.show()
+        }
+    }
+
+    private fun requestSMSPermission(){
+        PermissionManager.showOnlyRequestAnd(
+            activity, permissionForSMS, MainActivity.SEND_SMS_WITH_NOW_LOCATION
+            , "SMS 비상신고를 위한 SMS보내기 권한이 필요합니다."
+        )
+        { _, _ ->
+            activity.toast("SMS권한이 없으면 신고기능을 이용할 수 없습니다!")
         }
     }
 

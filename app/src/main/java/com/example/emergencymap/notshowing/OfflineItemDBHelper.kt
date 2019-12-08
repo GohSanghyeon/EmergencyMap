@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.example.emergencymap.ItemInfo
 
-class OfflineItemDBHelper(context : Context)
+class OfflineItemDBHelper(private val context : Context)
     : SQLiteOpenHelper(context, "SaveInfo", null, 1) {
     override fun onCreate(p0: SQLiteDatabase) {
         p0.execSQL("CREATE TABLE saveinfo(ItemNo int(11) PRIMARY KEY, Distinction int(11) PRIMARY KEY, BuildAddress varchar(500), DetailedPlace varchar(500), ManagerTel varchar(50));")
