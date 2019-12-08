@@ -16,7 +16,7 @@ import kotlin.collections.ArrayList
 
 class fire2_Education : AppCompatActivity() {
     private var viewList : ArrayList<View> = ArrayList<View>()
-    private val imagesMASK = listOf(R.raw.fire_hy_1, R.raw.fire_hy_2, R.raw.fire_hy_3, R.raw.fire_hy_4, R.raw.fire_hy_5)
+    private val imagesMASK = listOf(R.raw.fire_pump1, R.raw.fire_pump2, R.raw.fire_pump3, R.raw.fire_pump4, R.raw.fire_pump5)
     private val textDescriptionsMASK = listOf(
         "1. 발신기의 비상벨을 눌러 화재 사실을 알리십시오."
         , "2. 소화전함을 열어 노즐과 호스를 화재 발생지점으로 이동하십시오."

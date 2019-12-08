@@ -11,9 +11,9 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
-import com.example.emergencymap.EmergencyMenuClickListener.Companion.permissionForSMS
 import com.example.emergencymap.notshowing.LocationProvider
 import kotlinx.android.synthetic.main.dialog_sms.view.*
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 
@@ -149,33 +149,38 @@ class EmergencyMenuClickListener(
 
         val buttonAED = dialogView.findViewById<Button>(R.id.buttonAED)
         val buttonMASK = dialogView.findViewById<Button>(R.id.buttonMASK)
-        val buttonFIRE1 = dialogView.findViewById<Button>(R.id.buttonFIRE1)
-        val buttonFIRE2 = dialogView.findViewById<Button>(R.id.buttonFIRE2)
+        val buttonFireExtinguisher = dialogView.findViewById<Button>(R.id.buttonFIRE1)
+        val buttonfirePump = dialogView.findViewById<Button>(R.id.buttonFIRE2)
         val buttonCPR = dialogView.findViewById<Button>(R.id.buttonCPR)
 
         buttonAED.setOnClickListener {
-            val intent = Intent(activity, EmergencyEducationList::class.java)
-            startActivity(activity, intent, null)
+            activity.startActivity<EmergencyEducationList>(
+                EmergencyEducationList.KEY_CONTENTS to EmergencyEducationList.AED
+            )
         }
 
         buttonMASK.setOnClickListener {
-            val intent = Intent(activity, mask_Education::class.java)
-            startActivity(activity, intent, null)
+            activity.startActivity<EmergencyEducationList>(
+                EmergencyEducationList.KEY_CONTENTS to EmergencyEducationList.GAS_MASK
+            )
         }
 
-        buttonFIRE1.setOnClickListener {//소화기
-            val intent = Intent(activity, fire1_Education::class.java)
-            startActivity(activity, intent, null)
+        buttonFireExtinguisher.setOnClickListener {
+            activity.startActivity<EmergencyEducationList>(
+                EmergencyEducationList.KEY_CONTENTS to EmergencyEducationList.FIRE_EXTINGUISHER
+            )
         }
 
-        buttonFIRE2.setOnClickListener {//소화전
-            val intent = Intent(activity, fire2_Education::class.java)
-            startActivity(activity, intent, null)
+        buttonfirePump.setOnClickListener {//소화전
+            activity.startActivity<EmergencyEducationList>(
+                EmergencyEducationList.KEY_CONTENTS to EmergencyEducationList.FIRE_PUMP
+            )
         }
 
         buttonCPR.setOnClickListener {
-            val intent = Intent(activity, cpr_Education::class.java)
-            startActivity(activity, intent, null)
+            activity.startActivity<EmergencyEducationList>(
+                EmergencyEducationList.KEY_CONTENTS to EmergencyEducationList.CPR
+            )
         }
     }
 

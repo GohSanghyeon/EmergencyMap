@@ -3,6 +3,7 @@ package com.example.emergencymap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -12,30 +13,66 @@ import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget
 import kotlinx.android.synthetic.main.activity_education_list.*
-import java.util.*
 import kotlin.collections.ArrayList
 
 class EmergencyEducationList : AppCompatActivity() {
     lateinit var tts : TextToSpeech
     private var viewList : ArrayList<View> = ArrayList<View>()
-    private val imagesAED = listOf(R.raw.aed1, R.raw.aed2, R.raw.aed2)
-    private val textDescriptionsAED = listOf(
-        "1.AED를 열어 전원을 누릅니다."
-        , "2. 봉투를 열어 패드를 꺼내고 분리해줍니다."
-        , "3. 패드를 다음과 같이 환자에게 부착합니다."
-    )
+
+    companion object {
+        val imagesCPR = listOf(R.raw.cpr1, R.raw.cpr2, R.raw.cpr3, R.raw.cpr4)
+        val imagesAED = listOf(R.raw.aed1, R.raw.aed2, R.raw.aed2)
+        val imagesFireExtinguisher = listOf(R.raw.fire_ex1, R.raw.fire_ex2, R.raw.fire_ex3)
+        val imagesFirePump = listOf(R.raw.fire_pump1, R.raw.fire_pump2, R.raw.fire_pump3, R.raw.fire_pump4, R.raw.fire_pump5)
+        val imagesGasMask = listOf(R.raw.mask1, R.raw.mask2, R.raw.mask3, R.raw.mask4, R.raw.mask5, R.raw.mask6, R.raw.mask7)
+
+        const val KEY_CONTENTS = "CONTENTS"
+        const val CPR = "CPR"
+        const val AED = "AED"
+        const val FIRE_EXTINGUISHER = "FIRE EXTINGUISHER"
+        const val FIRE_PUMP = "FIRE PUMP"
+        const val GAS_MASK = "GAS MASK"
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_education_list)
-        imagesAED.forEachIndexed {nowIndex, idRawImage ->
+
+        val nowContents = intent.getStringExtra(KEY_CONTENTS)
+        val nowImageId = when(nowContents){
+            CPR -> imagesCPR
+            AED -> imagesAED
+            FIRE_EXTINGUISHER -> imagesFireExtinguisher
+            FIRE_PUMP -> imagesFirePump
+            GAS_MASK -> imagesGasMask
+            else -> {
+                Log.d("EmergencyEducationImage", "없는 Contents : $nowContents")
+                return
+            }
+        }
+
+        val nowDescription = when(nowContents){
+            CPR -> R.array.instructionCPR
+            AED -> R.array.instructionAED
+            FIRE_EXTINGUISHER -> R.array.instructionFireExtinguisher
+            FIRE_PUMP -> R.array.instructionFirePump
+            GAS_MASK -> R.array.instructionGasMask
+            else -> {
+                Log.d("EmergencyEducationDescr", "없는 Contents : $nowContents)")
+                return
+            }
+        }
+
+        nowImageId.forEachIndexed { nowIndex, idRawImage ->
             val nowView = layoutInflater.inflate(R.layout.activity_short_education, null)
             val imgView = nowView.findViewById<ImageView>(R.id.viewEducationImage)
             val txtView = nowView.findViewById<TextView>(R.id.textDescription)
             val canvas = GlideDrawableImageViewTarget(imgView)
+
             val nextBtn = nowView.findViewById<Button>(R.id.nbutton)
             nextBtn.visibility = View.INVISIBLE
-            txtView.text = textDescriptionsAED[nowIndex]
+            txtView.text = resources.getStringArray(nowDescription)[nowIndex]
             Glide.with(applicationContext).load(idRawImage).into(canvas)
             viewList.add(nowView)
         }

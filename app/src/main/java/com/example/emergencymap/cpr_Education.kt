@@ -17,7 +17,7 @@ import kotlin.collections.ArrayList
 
 class cpr_Education : AppCompatActivity() {
     private var viewList : ArrayList<View> = ArrayList<View>()
-    private val imagesCPR = listOf(R.raw.cpr_1, R.raw.cpr_2, R.raw.cpr_3, R.raw.cpr_4, R.raw.cpr_5, R.raw.cpr_6)
+    private val imagesCPR = listOf(R.raw.cpr1, R.raw.cpr2, R.raw.cpr3, R.raw.cpr4, R.raw.cpr_5, R.raw.cpr_6)
     private val textDescriptionsMASK = listOf(
         "1. 환자의 의식을 확인 후 119에 신고하십시오."
         , "2. 주변의 사람들에게 자동 심장 충격기(AED)를 찾아달라고 부탁하십시오."
@@ -33,7 +33,7 @@ class cpr_Education : AppCompatActivity() {
         lateinit var nextBtn : Button
         imagesCPR.forEachIndexed {nowIndex, idRawImage ->
             val nowView = layoutInflater.inflate(R.layout.activity_short_education, null)
-            nextBtn = nowView.findViewById<Button>(R.id.nbutton)
+            //nextBtn = nowView.findViewById<Button>(R.id.nbutton)
             val imgView = nowView.findViewById<ImageView>(R.id.viewEducationImage)
             val txtView = nowView.findViewById<TextView>(R.id.textDescription)
             val canvas = GlideDrawableImageViewTarget(imgView)
