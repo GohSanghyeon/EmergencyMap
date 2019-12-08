@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         //for permission check
         private const val STARTING = 10000
         private const val MOVE_TO_NOW_LOCATION = 10001
-        private const val SEND_SMS_WITH_NOW_LOCATION = 10002
+        const val SEND_SMS_WITH_NOW_LOCATION = 10002
 
         const val ITEMS_NUMBERS_OF_REGIONS = "Items numbers of Regions"
 
@@ -102,8 +102,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-
-
+        //앱 상호작용시 아이템 InfoWindow 제거
         itemDetailInfoWindow?.let {
             if(it.isAdded)
                 it.close()
@@ -434,6 +433,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 else
                     toast("권한이 허가되지 않아 기능을 이용할 수 없습니다.")
             }
+            SEND_SMS_WITH_NOW_LOCATION -> {
+                println("호출")
+            }
         }
     }
 
@@ -495,8 +497,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 else -> {
                     Log.d("setMarkerImage", "잘못된 distinction : $distinction");
                     OverlayImage.fromResource(R.drawable.transparent_pixel)
+                }
             }
-        }
 
         marker.isVisible = wasItemMarkerZoomLevel
                 && when(distinction){

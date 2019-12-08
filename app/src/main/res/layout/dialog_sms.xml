@@ -9,7 +9,8 @@
     <TextView
         android:id="@+id/textDialogueTitle"
         android:layout_width="match_parent"
-        android:layout_height="43dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
         android:gravity="center"
         android:text="비상 신고"
         android:textColor="#FF0000"
@@ -19,17 +20,46 @@
         android:id="@+id/selectionPatientStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/square_whiteframe"
         android:gravity="end" />
 
     <EditText
         android:id="@+id/editorSMSContents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rounded_square_whiteframe"
         android:ems="10"
         android:gravity="top"
         android:inputType="textLongMessage|textMultiLine|textPersonName|textEmailAddress"
         android:lines="6"
         android:maxLines="10"
         android:text="Name" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:orientation="horizontal">
+
+        <ProgressBar
+            android:id="@+id/progressLocation"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/textLocationCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="현재 위치는..."
+            android:textColor="#FF0000" />
+
+    </LinearLayout>
 
 </LinearLayout>

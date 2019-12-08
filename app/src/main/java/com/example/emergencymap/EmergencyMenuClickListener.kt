@@ -3,33 +3,23 @@ package com.example.emergencymap
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.location.Geocoder
-import android.location.Location
-import android.location.LocationManager
-import android.location.LocationProvider
 import android.telephony.SmsManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.ContextCompat.startActivity
-import com.google.android.youtube.player.internal.i
-import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.LocationSource
-import com.naver.maps.map.OnMapReadyCallback
-import com.naver.maps.map.style.sources.GeoJsonSource
 import kotlinx.android.synthetic.main.dialog_sms.view.*
-import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.toast
 
 
 class EmergencyMenuClickListener(
-
-    val groupSelection: ViewGroup
-    , val activity: AppCompatActivity)
+    private val groupSelection: ViewGroup
+    , private val activity: AppCompatActivity)
     : View.OnClickListener {
 
+    var setting :Int = 0
     override fun onClick(nowSelectionView: View?) {
         groupSelection.visibility = View.INVISIBLE
 
@@ -39,17 +29,32 @@ class EmergencyMenuClickListener(
         }
     }
 
+    private var messageNowLocation = ""
+
     private fun sendEmergencySMS() {
         // 비상신고 기능
-        var locationSource : LocationProvider
         val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val builder = AlertDialog.Builder(activity)
         val dialogView = inflater.inflate(R.layout.dialog_sms, null)
+        messageNowLocation = ""
 
-        (activity as MainActivity)?.let { mainActivity ->
-            //mainActivity.locationSource.requestNowLocation(MainActivity)
+        (activity as? MainActivity)?.let { mainActivity ->
+            val editorSending = dialogView.findViewById<EditText>(R.id.editorSMSContents)
 
-            val case = arrayOf("심정지 환자","화재 사건","지진","해일")
+            mainActivity.locationSource
+                .requestNowLocation(MainActivity.SEND_SMS_WITH_NOW_LOCATION){ nowLocation ->
+                    nowLocation?.let { nowLocation ->
+                        messageNowLocation = "현재 위치 : (${nowLocation.latitude}, ${nowLocation.longitude})\n"
+
+                        editorSending.setText(
+                            String.format("%s%s", messageNowLocation, editorSending.text))
+                    } ?: activity.toast("현재위치 받아오기 실패")
+
+                    dialogView.findViewById<ProgressBar>(R.id.progressLocation).visibility = View.GONE
+                    dialogView.findViewById<TextView>(R.id.textLocationCancel).visibility = View.GONE
+                }
+
+            val case = arrayOf("심정지 환자","화재 사건")
 
             val adapter = ArrayAdapter(
                 activity, // Context
@@ -62,12 +67,15 @@ class EmergencyMenuClickListener(
                 this.adapter = adapter
             }
 
-            val mainTv = dialogView.findViewById<EditText>(R.id.editorSMSContents)
-
             selectionPatientStatus.onItemSelectedListener =
                 object: AdapterView.OnItemSelectedListener{
                     override fun onItemSelected(parent:AdapterView<*>, view: View, position: Int, id: Long){
-                        mainTv.setText("${parent.getItemAtPosition(position)} 발생했습니다.\n" + "현재 위치 : ")
+                        setting = position
+
+                        editorSending.setText(
+                            String.format("%s%s"
+                                , messageNowLocation
+                                , "${parent.getItemAtPosition(position)} 발생했습니다.\n"))
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>){}
@@ -77,7 +85,18 @@ class EmergencyMenuClickListener(
                 .setPositiveButton("신고") { dialogInterface, i ->
                     /* 확인일 때 main의 View의 값에 dialog View에 있는 값을 적용 */
                     var obj = SmsManager.getDefault()
-                    obj.sendTextMessage("01056590848", null, "${mainTv.text}", null, null)
+                    obj.sendTextMessage("01029355768", null, "${editorSending.text}", null, null)
+                    when(setting){
+                        0 -> {
+                            val intent = Intent(activity, EmergencyEducationList::class.java)
+                            startActivity(activity, intent, null)
+                        }
+
+                        1 ->{
+                            val intent = Intent(activity, EmergencyEducationList::class.java)
+                            startActivity(activity, intent, null)
+                        }
+                    }
 
                 }
                 .setNegativeButton("취소") { dialogInterface, i ->
