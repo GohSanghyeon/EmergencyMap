@@ -402,34 +402,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun setOfflineSave(){
-
-     //   val myHelper = myDBHelper(this)
-      //  var sqlDB : SQLiteDatabase = myHelper.writableDatabase
-        //myHelper.onUpgrade(sqlDB, 1, 2)
-
-
-        /*buttonSaveFromMap.setOnClickListener {
-            var itemInfo: ItemInfo? = null
-            val Kno = resources.getString(R.string.ItemNo)
-            val Kdistictiion = resources.getString(R.string.Distinction)
-            val Kaddress = resources.getString(R.string.BuildAddress)
-            val KdetailAddress = resources.getString(R.string.DetailedPlace)
-            val KmTel = resources.getString(R.string.ManagerTel)
-
-            if (itemInfo != null) {
-                Toast.makeText(this, "${itemInfo.itemAttributes[Kno]}", Toast.LENGTH_LONG).show()
-            }
-*//*
-            sqlDB.execSQL("INSERT INTO saveinfo VALUES('"
-                    + Kno+"','"
-                    +Kdistictiion+"','"
-                    +Kaddress +"','"
-                    +KdetailAddress+"','"
-                    +KmTel+"');")
-            Toast.makeText(this, "위치가 저장되었습니다", Toast.LENGTH_SHORT).show()
-
- *//*
-        }*/
         buttonSaveFromMap.setOnClickListener {
             databaseForOffline.doSomething(itemsOnMap)
         }
