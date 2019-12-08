@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
+import com.example.emergencymap.EmergencyMenuClickListener.Companion.permissionForSMS
 import com.example.emergencymap.notshowing.LocationProvider
 import kotlinx.android.synthetic.main.dialog_sms.view.*
 import org.jetbrains.anko.toast
@@ -73,7 +74,7 @@ class EmergencyMenuClickListener(
                 dialogView.findViewById<TextView>(R.id.textLocationCancel).visibility = View.GONE
             }
 
-            val case = arrayOf("심정지 환자","화재 사건")
+            val case = arrayOf("심정지 환자","화재 사건(대피)", "화재 사건(진화)")
 
             val adapter = ArrayAdapter(
                 activity, // Context
@@ -107,11 +108,15 @@ class EmergencyMenuClickListener(
                     obj.sendTextMessage("01029355768", null, "${editorSending.text}", null, null)
                     when(setting){
                         0 -> {
-                            val intent = Intent(activity, EmergencyEducationList::class.java)
+                            val intent = Intent(activity, cpr_Education::class.java) // 심정지
                             startActivity(activity, intent, null)
                         }
                         1 ->{
-                            val intent = Intent(activity, EmergencyEducationList::class.java)
+                            val intent = Intent(activity, mask_Education::class.java) //화재대피
+                            startActivity(activity, intent, null)
+                        }
+                        2 -> {
+                            val intent = Intent(activity, fire1_Education::class.java) //화재 진화
                             startActivity(activity, intent, null)
                         }
                     }
@@ -146,7 +151,7 @@ class EmergencyMenuClickListener(
         val buttonMASK = dialogView.findViewById<Button>(R.id.buttonMASK)
         val buttonFIRE1 = dialogView.findViewById<Button>(R.id.buttonFIRE1)
         val buttonFIRE2 = dialogView.findViewById<Button>(R.id.buttonFIRE2)
-        val buttonWATER = dialogView.findViewById<Button>(R.id.buttonWATER)
+        val buttonCPR = dialogView.findViewById<Button>(R.id.buttonCPR)
 
         buttonAED.setOnClickListener {
             val intent = Intent(activity, EmergencyEducationList::class.java)
@@ -154,19 +159,23 @@ class EmergencyMenuClickListener(
         }
 
         buttonMASK.setOnClickListener {
-
+            val intent = Intent(activity, mask_Education::class.java)
+            startActivity(activity, intent, null)
         }
 
-        buttonFIRE1.setOnClickListener {
-
+        buttonFIRE1.setOnClickListener {//소화기
+            val intent = Intent(activity, fire1_Education::class.java)
+            startActivity(activity, intent, null)
         }
 
-        buttonFIRE2.setOnClickListener {
-
+        buttonFIRE2.setOnClickListener {//소화전
+            val intent = Intent(activity, fire2_Education::class.java)
+            startActivity(activity, intent, null)
         }
 
-        buttonWATER.setOnClickListener {
-
+        buttonCPR.setOnClickListener {
+            val intent = Intent(activity, cpr_Education::class.java)
+            startActivity(activity, intent, null)
         }
     }
 

@@ -19,7 +19,11 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
         <activity android:name=".EmergencyEducationList" />
+        <activity android:name=".mask_Education"></activity>
         <activity android:name=".TutorialActivity"></activity>
+        <activity android:name=".cpr_Education"></activity>
+        <activity android:name=".fire1_Education"></activity>
+        <activity android:name=".fire2_Education"></activity>
         <activity
             android:name=".HowToWithYoutube"
             android:screenOrientation="landscape"

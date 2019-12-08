@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
@@ -27,25 +28,14 @@ class EmergencyEducationList : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_education_list)
-
-        tts = TextToSpeech(this, TextToSpeech.OnInitListener {
-            fun onInit(status: Int){
-                if(status != TextToSpeech.ERROR){
-                    tts.setLanguage(Locale.KOREA)
-                }
-            }
-        })
-
         imagesAED.forEachIndexed {nowIndex, idRawImage ->
             val nowView = layoutInflater.inflate(R.layout.activity_short_education, null)
             val imgView = nowView.findViewById<ImageView>(R.id.viewEducationImage)
             val txtView = nowView.findViewById<TextView>(R.id.textDescription)
             val canvas = GlideDrawableImageViewTarget(imgView)
-
+            val nextBtn = nowView.findViewById<Button>(R.id.nbutton)
+            nextBtn.visibility = View.INVISIBLE
             txtView.text = textDescriptionsAED[nowIndex]
-
-            //tts.speak(textAED[nowIndex], TextToSpeech.QUEUE_FLUSH, null)
-            //이 형식으로 넣으면 됨(tts)
             Glide.with(applicationContext).load(idRawImage).into(canvas)
             viewList.add(nowView)
         }
