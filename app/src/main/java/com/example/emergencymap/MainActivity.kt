@@ -493,8 +493,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 else -> {
                     Log.d("setMarkerImage", "잘못된 distinction : $distinction");
                     OverlayImage.fromResource(R.drawable.transparent_pixel)
+                }
             }
-        }
 
         marker.isVisible = wasItemMarkerZoomLevel
                 && when(distinction){

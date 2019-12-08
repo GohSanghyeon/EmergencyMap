@@ -8,6 +8,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.location.LocationProvider
 import android.telephony.SmsManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +31,7 @@ class EmergencyMenuClickListener(
     , val activity: AppCompatActivity)
     : View.OnClickListener {
 
+    var setting :Int = 0
     override fun onClick(nowSelectionView: View?) {
         groupSelection.visibility = View.INVISIBLE
 
@@ -66,8 +68,7 @@ class EmergencyMenuClickListener(
             selectionPatientStatus.onItemSelectedListener =
                 object: AdapterView.OnItemSelectedListener{
                     override fun onItemSelected(parent:AdapterView<*>, view: View, position: Int, id: Long){
-
-
+                        setting = position
                         mainTv.setText("${parent.getItemAtPosition(position)} 발생했습니다.\n" + "현재 위치 : ")
                     }
 
@@ -78,7 +79,18 @@ class EmergencyMenuClickListener(
                 .setPositiveButton("신고") { dialogInterface, i ->
                     /* 확인일 때 main의 View의 값에 dialog View에 있는 값을 적용 */
                     var obj = SmsManager.getDefault()
-                    obj.sendTextMessage("01056590848", null, "${mainTv.text}", null, null)
+                    obj.sendTextMessage("01029355768", null, "${mainTv.text}", null, null)
+                    when(setting){
+                        0 -> {
+                            val intent = Intent(activity, EmergencyEducationList::class.java)
+                            startActivity(activity, intent, null)
+                        }
+
+                        1 ->{
+                            val intent = Intent(activity, EmergencyEducationList::class.java)
+                            startActivity(activity, intent, null)
+                        }
+                    }
 
                 }
                 .setNegativeButton("취소") { dialogInterface, i ->
