@@ -28,14 +28,6 @@ class EmergencyEducationList : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_education_list)
 
-        tts = TextToSpeech(this, TextToSpeech.OnInitListener {
-            fun onInit(status: Int){
-                if(status != TextToSpeech.ERROR){
-                    tts.setLanguage(Locale.KOREA)
-                }
-            }
-        })
-
         imagesAED.forEachIndexed {nowIndex, idRawImage ->
             val nowView = layoutInflater.inflate(R.layout.activity_short_education, null)
             val imgView = nowView.findViewById<ImageView>(R.id.viewEducationImage)
@@ -44,8 +36,6 @@ class EmergencyEducationList : AppCompatActivity() {
 
             txtView.text = textDescriptionsAED[nowIndex]
 
-            //tts.speak(textAED[nowIndex], TextToSpeech.QUEUE_FLUSH, null)
-            //이 형식으로 넣으면 됨(tts)
             Glide.with(applicationContext).load(idRawImage).into(canvas)
             viewList.add(nowView)
         }
