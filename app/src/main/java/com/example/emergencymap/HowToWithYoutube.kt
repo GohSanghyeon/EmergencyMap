@@ -46,7 +46,7 @@ class HowToWithYoutube : YouTubeBaseActivity() {
     private fun initUI() {
         youtubePlayerInit = object :YouTubePlayer.OnInitializedListener{
             override fun onInitializationSuccess(p0: YouTubePlayer.Provider?, youTubePlayer: YouTubePlayer, p2: Boolean){
-                youTubePlayer.loadVideo(VIDEO_ID[itemIs].second)
+                 youTubePlayer.loadVideo(VIDEO_ID[itemIs].second)
                 youTubePlayer.setOnFullscreenListener { youTubePlayer.setFullscreen(false) }
                 youTubePlayer.setPlayerStateChangeListener(object : YouTubePlayer.PlayerStateChangeListener{
                     override fun onAdStarted() {}

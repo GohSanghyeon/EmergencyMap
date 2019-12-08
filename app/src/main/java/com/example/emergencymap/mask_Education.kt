@@ -36,8 +36,8 @@ class mask_Education : AppCompatActivity() {
             val imgView = nowView.findViewById<ImageView>(R.id.viewEducationImage)
             val txtView = nowView.findViewById<TextView>(R.id.textDescription)
             val canvas = GlideDrawableImageViewTarget(imgView)
-            val nextBtn = nowView.findViewById<Button>(R.id.nbutton)
-            nextBtn.visibility = View.INVISIBLE
+            //val nextBtn = nowView.findViewById<Button>(R.id.nbutton)
+            //nextBtn.visibility = View.INVISIBLE
             txtView.text = textDescriptionsMASK[nowIndex]
 
             Glide.with(applicationContext).load(idRawImage).into(canvas)

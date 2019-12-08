@@ -25,6 +25,7 @@
         tools:text="테스트용 텍스트" />
 
     <LinearLayout
+        android:id="@+id/layoutEducationDirection"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
@@ -32,19 +33,38 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/buttonExitContents"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="0"
             android:background="@drawable/rounded_square_emergency"
-            android:text="다음단계"
-            android:textColor="@android:color/white" />
+            android:text="처음으로"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonNextContents"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/rounded_square_emergency"
+            android:text="다음단계"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/buttonOutEmergencyEducation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_weight="0"
-            android:text="Button" />
+            android:background="@drawable/rounded_square_general"
+            android:text="돌아가기"
+            android:textSize="16sp" />
     </LinearLayout>
 
 </LinearLayout>

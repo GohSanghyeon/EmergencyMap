@@ -25,70 +25,11 @@ class SelectionForEducation : AppCompatActivity() {
         list.add(YoutubeItem(getDrawable(R.drawable.thumbnail_boat)!!, getString(R.string.title6), intent))
 
 
-        val adapter = RecyclerAdapter(list)
+        val adapter = YoutubeSelectionRecyclerViewAdapter(list)
         recyclerView.adapter = adapter
 
         recyclerView.addItemDecoration(
             DividerItemDecoration(this, DividerItemDecoration.VERTICAL))/*구분선 표시*/
         }
 
-
-
-    /* intent.putExtra(HowToWithYoutube.ITEM_IS, HowToWithYoutube.AED)
-     intent.putExtra(HowToWithYoutube.ITEM_IS, HowToWithYoutube.GASMASK)
-     intent.putExtra(HowToWithYoutube.ITEM_IS, HowToWithYoutube.FIREITEM)
-     intent.putExtra(HowToWithYoutube.ITEM_IS, HowToWithYoutube.WATERITEM)*/
-
-
-
-    /*  val pos0 = adapter.getItemViewType(0).apply {
-            val intent = Intent(applicationContext, HowToWithYoutube::class.java)
-            intent.putExtra(HowToWithYoutube.ITEM_IS, HowToWithYoutube.AED)
-            startActivity(intent)
-        }*/
-        /*val pos1 = adapter.getItemId(1).apply {
-            val intent = Intent(applicationContext, HowToWithYoutube::class.java)
-            intent.putExtra(HowToWithYoutube.ITEM_IS, HowToWithYoutube.AED)
-            startActivity(intent)
-        }
-        val pos2 = adapter.getItemId(2)
-        val pos3 = adapter.getItemId(3)*/
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
-
-
-/*aed_btn.setOnClickListener {
-           val intent = Intent(this, HowToWithYoutube::class.java)
-               intent.putExtra(HowToWithYoutube.ITEM_IS, HowToWithYoutube.AED)
-           startActivity(intent)
-       }
-
-       bangdok_btn.setOnClickListener {
-           val intent = Intent(this, HowToWithYoutube::class.java)
-           intent.putExtra(HowToWithYoutube.ITEM_IS, HowToWithYoutube.GASMASK)
-           startActivity(intent)
-       }
-
-       fireProtect_btn.setOnClickListener {
-            val intent = Intent(this, HowToWithYoutube::class.java)
-           intent.putExtra(HowToWithYoutube.ITEM_IS, HowToWithYoutube.FIREITEM)
-           startActivity(intent)
-       }
-
-       seaProtect_btn.setOnClickListener{
-           val intent = Intent(this, HowToWithYoutube::class.java)
-           intent.putExtra(HowToWithYoutube.ITEM_IS, HowToWithYoutube.WATERITEM)
-           startActivity(intent)
-       }*/

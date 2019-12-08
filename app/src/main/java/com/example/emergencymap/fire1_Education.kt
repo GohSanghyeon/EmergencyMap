@@ -15,6 +15,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget
 import kotlinx.android.synthetic.main.activity_education_list.*
 import kotlin.collections.ArrayList
 
+/*
 class fire1_Education : AppCompatActivity() {
     private var viewList : ArrayList<View> = ArrayList<View>()
     private val imagesFIRE1 = listOf(R.raw.fire_ex1, R.raw.fire_ex2, R.raw.fire_ex3)
@@ -33,20 +34,20 @@ class fire1_Education : AppCompatActivity() {
             val imgView = nowView.findViewById<ImageView>(R.id.viewEducationImage)
             val txtView = nowView.findViewById<TextView>(R.id.textDescription)
             val canvas = GlideDrawableImageViewTarget(imgView)
-            val nextBtn = nowView.findViewById<Button>(R.id.nbutton)
+            //val nextBtn = nowView.findViewById<Button>(R.id.nbutton)
             txtView.text = textDescriptionsMASK[nowIndex]
             if(nowIndex == imagesFIRE1.size-1){
-                nextBtn.visibility = View.VISIBLE
+                //nextBtn.visibility = View.VISIBLE
             }
             else{
-                nextBtn.visibility = View.INVISIBLE
+                //nextBtn.visibility = View.INVISIBLE
             }
-            nextBtn.setOnClickListener {
+            //nextBtn.setOnClickListener {
                 val intent  = Intent(this, fire2_Education::class.java)
                 startActivity(intent)
             }
-            Glide.with(applicationContext).load(idRawImage).into(canvas)
-            viewList.add(nowView)
+            //Glide.with(applicationContext).load(idRawImage).into(canvas)
+            //viewList.add(nowView)
         }
 
         pagerEducation.adapter = PagerEducationAdapter()
@@ -72,4 +73,4 @@ class fire1_Education : AppCompatActivity() {
             pagerEducation.removeView(obj as View)
         }
     }
-}
+}*/

@@ -116,8 +116,8 @@ class EmergencyMenuClickListener(
                             startActivity(activity, intent, null)
                         }
                         2 -> {
-                            val intent = Intent(activity, fire1_Education::class.java) //화재 진화
-                            startActivity(activity, intent, null)
+                            //val intent = Intent(activity, fire1_Education::class.java) //화재 진화
+                            //startActivity(activity, intent, null)
                         }
                     }
 
@@ -183,7 +183,4 @@ class EmergencyMenuClickListener(
             )
         }
     }
-
-
-
 }

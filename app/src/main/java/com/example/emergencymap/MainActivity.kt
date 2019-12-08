@@ -23,6 +23,7 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.MarkerIcons
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import org.json.JSONArray
 import org.json.JSONException
@@ -97,6 +98,32 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         setItemInfoWindow()
+        buttonList.setOnClickListener {
+            val buildAddressList = mutableListOf<String>()
+            val detailedPlaceArray = mutableListOf<String>()
+            val distinctionArray = mutableListOf<Int>()
+
+            val keyBuildAddress = getString(R.string.BuildAddress)
+            val keyDetailedPlace = getString(R.string.DetailedPlace)
+            val keyDistinction = getString(R.string.Distinction)
+
+            itemsOnMap.forEach{
+                val nowBuildAddress = it.itemAttributes[getString(R.string.BuildAddress)]
+                val nowDetailedPlace = it.itemAttributes[getString(R.string.DetailedPlace)]
+                if((nowBuildAddress != null) && (nowDetailedPlace != null)) {
+                    buildAddressList.add(nowBuildAddress)
+                    detailedPlaceArray.add(nowDetailedPlace)
+                    distinctionArray.add(it.itemDistinction)
+                }
+            }
+
+            startActivity<LocationList>(
+                keyBuildAddress to buildAddressList.toTypedArray(),
+                keyDetailedPlace to detailedPlaceArray.toTypedArray(),
+                keyDistinction to distinctionArray.toTypedArray()
+            )
+        }
+
 
         setToggleButtonAED()
         setToggleButtonShelter()

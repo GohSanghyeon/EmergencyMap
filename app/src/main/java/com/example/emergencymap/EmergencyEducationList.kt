@@ -1,9 +1,11 @@
 package com.example.emergencymap
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -14,6 +16,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget
 import kotlinx.android.synthetic.main.activity_education_list.*
 import kotlin.collections.ArrayList
+import kotlinx.android.synthetic.main.dialog_emergencyeducation.*
+import java.util.*
 
 class EmergencyEducationList : AppCompatActivity() {
     lateinit var tts : TextToSpeech
@@ -70,8 +74,8 @@ class EmergencyEducationList : AppCompatActivity() {
             val txtView = nowView.findViewById<TextView>(R.id.textDescription)
             val canvas = GlideDrawableImageViewTarget(imgView)
 
-            val nextBtn = nowView.findViewById<Button>(R.id.nbutton)
-            nextBtn.visibility = View.INVISIBLE
+            //val nextBtn = nowView.findViewById<Button>(R.id.nbutton)
+            //nextBtn.visibility = View.INVISIBLE
             txtView.text = resources.getStringArray(nowDescription)[nowIndex]
             Glide.with(applicationContext).load(idRawImage).into(canvas)
             viewList.add(nowView)
