@@ -31,7 +31,7 @@ class StartupActivity : AppCompatActivity(){
             netMonitor,
             doingIsConnected = {
                 runOnUiThread {
-                    toast("Network : On-line")
+                    toast("인터넷 연결을 확인했습니다.")
                     textNowWorking.text = "지역별 정보를 다운로드 중..."
                 }
 
@@ -45,12 +45,13 @@ class StartupActivity : AppCompatActivity(){
                 }.execute()
             }
             , doingIsDisconnected = {
-                //Todo : 인터넷이 Offline일때 할 것
-
                 runOnUiThread {
-                    toast("Network : Off-line")
-                    textNowWorking.text = "이제 오프라인 때 나오는 액티비티로 전환해야 함"
+                    toast("인터넷에 연결할 수 없습니다.")
                     progressBar.visibility = View.INVISIBLE
+
+                    startActivity<ItemListActivity>(
+                        ItemListActivity.KEY_MODE to ItemListActivity.OFFLINE
+                    )
                 }
             })
 

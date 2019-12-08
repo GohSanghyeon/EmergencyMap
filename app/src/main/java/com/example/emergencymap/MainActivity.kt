@@ -100,28 +100,43 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         setItemInfoWindow()
         buttonList.setOnClickListener {
             val buildAddressList = mutableListOf<String>()
-            val detailedPlaceArray = mutableListOf<String>()
-            val distinctionArray = mutableListOf<Int>()
+            val detailedPlaceList = mutableListOf<String>()
+            val distinctionList = mutableListOf<Int>()
+            val itemLatitudeList = mutableListOf<Double>()
+            val itemLongitudeList = mutableListOf<Double>()
 
             val keyBuildAddress = getString(R.string.BuildAddress)
             val keyDetailedPlace = getString(R.string.DetailedPlace)
             val keyDistinction = getString(R.string.Distinction)
+            val keyLatitude = getString(R.string.Latitude)
+            val keyLongitude = getString(R.string.Longitude)
 
             itemsOnMap.forEach{
                 val nowBuildAddress = it.itemAttributes[getString(R.string.BuildAddress)]
                 val nowDetailedPlace = it.itemAttributes[getString(R.string.DetailedPlace)]
                 if((nowBuildAddress != null) && (nowDetailedPlace != null)) {
                     buildAddressList.add(nowBuildAddress)
-                    detailedPlaceArray.add(nowDetailedPlace)
-                    distinctionArray.add(it.itemDistinction)
+                    detailedPlaceList.add(nowDetailedPlace)
+                    distinctionList.add(it.itemDistinction)
+                    itemLatitudeList.add(it.itemLatitude)
+                    itemLongitudeList.add(it.itemLongitude)
                 }
             }
 
-            startActivity<LocationList>(
-                keyBuildAddress to buildAddressList.toTypedArray(),
-                keyDetailedPlace to detailedPlaceArray.toTypedArray(),
-                keyDistinction to distinctionArray.toTypedArray()
-            )
+            map?.let { map ->
+                val nowMapLatitude = map.cameraPosition.target.latitude
+                val nowMapLongitude = map.cameraPosition.target.longitude
+                    startActivity<ItemListActivity>(
+                        ItemListActivity.KEY_MODE to ItemListActivity.ONLINE,
+                        keyBuildAddress to buildAddressList.toTypedArray(),
+                        keyDetailedPlace to detailedPlaceList.toTypedArray(),
+                        keyDistinction to distinctionList.toIntArray(),
+                        keyLatitude to itemLatitudeList.toDoubleArray(),
+                        keyLongitude to itemLongitudeList.toDoubleArray(),
+                        ItemListActivity.CENTER_LOCATION_LATITUDE to nowMapLatitude,
+                        ItemListActivity.CENTER_LOCATION_LONGITUDE to nowMapLongitude
+                    )
+            }
         }
 
 
@@ -265,27 +280,27 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun setItemClickListener(itemInfo: ItemInfo) {
-        val newItemMarker = itemInfo.itemMarker
-        itemInfo.itemMarker.setOnClickListener {
-            runOnUiThread {
-                itemDetailInfoWindow?.let{ itemInfoWindow ->
-                    if(itemInfoWindow.isAdded && itemInfoWindow.marker == newItemMarker){
-                        itemInfoWindow.close()
-                        return@runOnUiThread
-                    }
-                    else if(itemInfoWindow.isAdded)
-                        itemInfoWindow.close()
+        itemInfo.itemMarker?.let { newItemMarker ->
+            newItemMarker.setOnClickListener {
+                runOnUiThread {
+                    itemDetailInfoWindow?.let { itemInfoWindow ->
+                        if (itemInfoWindow.isAdded && itemInfoWindow.marker == newItemMarker) {
+                            itemInfoWindow.close()
+                            return@runOnUiThread
+                        } else if (itemInfoWindow.isAdded)
+                            itemInfoWindow.close()
 
-                    val nowInfoWindowAdapter = itemInfoWindow.adapter
-                    if(nowInfoWindowAdapter is ItemDetailInfoWindowAdapter) {
-                        nowInfoWindowAdapter.itemInfo = itemInfo
-                        itemInfoWindow.open(newItemMarker)
-                    }
+                        val nowInfoWindowAdapter = itemInfoWindow.adapter
+                        if (nowInfoWindowAdapter is ItemDetailInfoWindowAdapter) {
+                            nowInfoWindowAdapter.itemInfo = itemInfo
+                            itemInfoWindow.open(newItemMarker)
+                        }
 
-                    map?.moveCamera(CameraUpdate.scrollTo(newItemMarker.position))
+                        map?.moveCamera(CameraUpdate.scrollTo(newItemMarker.position))
+                    }
                 }
+                true
             }
-            true
         }
     }
 
@@ -357,7 +372,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             itemsOnMap.filter {
                 it.itemDistinction == resources.getInteger(R.integer.AED)
             }.forEach {
-                it.itemMarker.isVisible = isItemMarkerZoomLevel
+                it.itemMarker?.isVisible = isItemMarkerZoomLevel
                         && buttonAEDVisible.isChecked
             }
 
@@ -385,7 +400,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     , resources.getInteger(R.integer.MBWShelter)
                 ).contains(it.itemDistinction)
             }.forEach {
-                it.itemMarker.isVisible = isItemMarkerZoomLevel
+                it.itemMarker?.isVisible = isItemMarkerZoomLevel
                         && buttonShelterVisible.isChecked
             }
 
@@ -408,7 +423,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             itemsOnMap.filter {
                 it.itemDistinction == resources.getInteger(R.integer.EmergencyRoom)
             }.forEach {
-                it.itemMarker.isVisible = isItemMarkerZoomLevel
+                it.itemMarker?.isVisible = isItemMarkerZoomLevel
                         && buttonEmergencyRoomVisible.isChecked
             }
 
@@ -447,7 +462,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             itemsOnMap.filter {
                 it.itemDistinction == resources.getInteger(R.integer.Pharmacy)
             }.forEach {
-                it.itemMarker.isVisible = isItemMarkerZoomLevel
+                it.itemMarker?.isVisible = isItemMarkerZoomLevel
                         && buttonPharmaciesVisible.isChecked
             }
 
@@ -567,7 +582,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         if(needChange) {
             itemsOnMap.forEach {
-                it.itemMarker.isVisible = isItemMarkerZoomLevel
+                it.itemMarker?.isVisible = isItemMarkerZoomLevel
                         && when (it.itemDistinction) {
                     resources.getInteger(R.integer.AED)
                     -> buttonAEDVisible.isChecked

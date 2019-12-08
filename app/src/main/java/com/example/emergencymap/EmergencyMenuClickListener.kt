@@ -74,7 +74,7 @@ class EmergencyMenuClickListener(
                 dialogView.findViewById<TextView>(R.id.textLocationCancel).visibility = View.GONE
             }
 
-            val case = arrayOf("심정지 환자","화재 사건(대피)", "화재 사건(진화)")
+            val case = arrayOf("심정지 환자","화재 사건(대피중)", "화재 사건(진화중)")
 
             val adapter = ArrayAdapter(
                 activity, // Context
@@ -108,16 +108,19 @@ class EmergencyMenuClickListener(
                     obj.sendTextMessage("01029355768", null, "${editorSending.text}", null, null)
                     when(setting){
                         0 -> {
-                            val intent = Intent(activity, cpr_Education::class.java) // 심정지
-                            startActivity(activity, intent, null)
+                            activity.startActivity<EmergencyEducationList>(
+                                EmergencyEducationList.KEY_CONTENTS to EmergencyEducationList.CPR
+                            )
                         }
                         1 ->{
-                            val intent = Intent(activity, mask_Education::class.java) //화재대피
-                            startActivity(activity, intent, null)
+                            activity.startActivity<EmergencyEducationList>(
+                                EmergencyEducationList.KEY_CONTENTS to EmergencyEducationList.GAS_MASK
+                            )
                         }
                         2 -> {
-                            //val intent = Intent(activity, fire1_Education::class.java) //화재 진화
-                            //startActivity(activity, intent, null)
+                            activity.startActivity<EmergencyEducationList>(
+                                EmergencyEducationList.KEY_CONTENTS to EmergencyEducationList.FIRE_EXTINGUISHER
+                            )
                         }
                     }
 
