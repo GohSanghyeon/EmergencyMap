@@ -1,7 +1,6 @@
 package com.example.emergencymap
 
 import android.Manifest
-import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
@@ -17,13 +16,11 @@ import androidx.core.view.iterator
 import com.example.emergencymap.notshowing.Boundary
 import com.example.emergencymap.notshowing.ItemsDownloader
 import com.example.emergencymap.notshowing.LocationProvider
-import com.example.emergencymap.notshowing.myDBHelper
-import com.google.android.youtube.player.internal.i
+import com.example.emergencymap.notshowing.OfflineItemDBHelper
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.MarkerIcons
 import kotlinx.android.synthetic.main.activity_main.*
@@ -54,6 +51,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var isItemMarkerZoomLevel = true
     private var wasItemMarkerZoomLevel = true
 
+    private lateinit var databaseForOffline: OfflineItemDBHelper
+
     companion object{
         //for permission check
         private const val STARTING = 10000
@@ -81,6 +80,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         checkShowingTutorial()
+        databaseForOffline = OfflineItemDBHelper(this)
 
         mountMap()
         locationSource = LocationProvider(this)
@@ -408,7 +408,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         //myHelper.onUpgrade(sqlDB, 1, 2)
 
 
-        buttonSaveFromMap.setOnClickListener {
+        /*buttonSaveFromMap.setOnClickListener {
             var itemInfo: ItemInfo? = null
             val Kno = resources.getString(R.string.ItemNo)
             val Kdistictiion = resources.getString(R.string.Distinction)
@@ -419,7 +419,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             if (itemInfo != null) {
                 Toast.makeText(this, "${itemInfo.itemAttributes[Kno]}", Toast.LENGTH_LONG).show()
             }
-/*
+*//*
             sqlDB.execSQL("INSERT INTO saveinfo VALUES('"
                     + Kno+"','"
                     +Kdistictiion+"','"
@@ -428,12 +428,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     +KmTel+"');")
             Toast.makeText(this, "위치가 저장되었습니다", Toast.LENGTH_SHORT).show()
 
- */
+ *//*
+        }*/
+        buttonSaveFromMap.setOnClickListener {
+            databaseForOffline.doSomething(itemsOnMap)
         }
     }
 
     private fun delDB(){
-        val myHelper = myDBHelper(this)
+        val myHelper = OfflineItemDBHelper(this)
         var sqlDB : SQLiteDatabase = myHelper.readableDatabase
         myHelper.onUpgrade(sqlDB, 1, 2)
         var cursor : Cursor
