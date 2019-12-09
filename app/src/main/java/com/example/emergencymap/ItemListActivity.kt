@@ -1,16 +1,25 @@
 package com.example.emergencymap
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
+import android.net.ConnectivityManager
+import android.net.Network
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.core.view.iterator
 import com.example.emergencymap.notshowing.LocationProvider
 import com.example.emergencymap.notshowing.OfflineItemDBHelper
+import com.example.emergencymap.notshowing.RegionInfoDownloader
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import kotlinx.android.synthetic.main.activity_location_list.*
+import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import java.lang.Integer.min
 
@@ -134,6 +143,27 @@ class ItemListActivity: AppCompatActivity() {
         buttonNowLocationOffline.setOnClickListener {
             setNewLocationToList(itemMappedForList)
         }
+
+        setEmergencyButton()
+
+        val netMonitor = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        netMonitor.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback(){
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                netMonitor.unregisterNetworkCallback(this)
+                RegionInfoDownloader(this@ItemListActivity) {
+                    var strItemNumbersOfRegions = ""
+                    it?.let{ strItemNumbersOfRegions = it.toString() }
+
+                    startActivity<MainActivity>(
+                        MainActivity.ITEMS_NUMBERS_OF_REGIONS to strItemNumbersOfRegions
+                    )
+                    toast("인터넷 연결을 확인했습니다.")
+                }.execute()
+            }
+        })
     }
 
     private fun getDrawableFromDistinction(distinction: Int) : Drawable?
@@ -158,6 +188,22 @@ class ItemListActivity: AppCompatActivity() {
             toast("조회 완료")
         }
 
+    private fun setEmergencyButton(){
+        buttonEmergencyOffline.visibility = View.VISIBLE
+        buttonEmergencyOffline.setOnClickListener {
+            //show emergency menu selections
+            if(layoutEmergencySelectionOffline.isVisible)
+                layoutEmergencySelectionOffline.visibility = View.INVISIBLE
+            else
+                layoutEmergencySelectionOffline.visibility = View.VISIBLE
+        }
+
+        //emergency menu click listener setting
+        if(layoutEmergencySelectionOffline is ViewGroup)
+            for(menuItem in layoutEmergencySelectionOffline)
+                menuItem.setOnClickListener(EmergencyMenuClickListener(layoutEmergencySelectionOffline as ViewGroup, this))
+    }
+
     override fun onRequestPermissionsResult(
         functionCode: Int,
         permissions: Array<out String>,
@@ -170,4 +216,6 @@ class ItemListActivity: AppCompatActivity() {
             }
         }
     }
+
+
 }

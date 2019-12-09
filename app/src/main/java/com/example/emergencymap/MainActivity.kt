@@ -1,12 +1,15 @@
 package com.example.emergencymap
 
 import android.Manifest
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.Network
 import android.util.Log
 import android.view.*
 import androidx.annotation.UiThread
@@ -60,10 +63,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         const val ITEMS_NUMBERS_OF_REGIONS = "Items numbers of Regions"
 
+        const val PREF_NAME = "LatestConfigure"
+        const val PREF_KEY_AED_CHECKED = "AEDChecked"
+        const val PREF_KEY_SHELTERS_CHECKED = "SheltersChecked"
+        const val PREF_KEY_EMERGENCY_ROOM_CHECKED = "EmergencyRoomChecked"
+        const val PREF_KEY_PHARMACY_CHECKED = "PharmacyChecked"
+
+        const val PREF_KEY_CAMERA_LATITUDE = "CameraLatitude"
+        const val PREF_KEY_CAMERA_LONGITUDE = "CameraLongitude"
+        const val PREF_KEY_CAMERA_ZOOM = "CameraZoom"
+
         private var markerWidth = 80
         private var markerHeight = 100
         private var limitDistance = 0.1        //Coordinate Compensation Value
         private var minZoom = 5.0
+
+        val defaultCameraPosition = LatLng(37.30260779, 127.9211684)
+        val defaultCameraZoom = 6.0
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -146,6 +162,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         setToggleButtonPharmacy()
         setEmergencyButton()
         setOfflineSave()
+
+        val netMonitor = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        netMonitor.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback(){
+            override fun onLost(network: Network) {
+                toast("인터넷 연결이 중단되었습니다.")
+
+                startActivity<ItemListActivity>(
+                    ItemListActivity.KEY_MODE to ItemListActivity.OFFLINE
+                )
+            }
+        })
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -186,9 +213,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
-        val heungup = LatLng(37.30260779, 127.9211684)
-        naverMap.moveCamera(CameraUpdate.scrollTo(heungup))
-
         setRegionMarkers(naverMap)
 
         map = naverMap
@@ -276,6 +300,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 taskDownload.execute()
             }
+
+            initializeLatestPreference()
         }
     }
 
@@ -296,7 +322,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                             itemInfoWindow.open(newItemMarker)
                         }
 
-                        map?.moveCamera(CameraUpdate.scrollTo(newItemMarker.position))
+                        map?.moveCamera(CameraUpdate.scrollTo(newItemMarker.position)
+                            .animate(CameraAnimation.Easing, 1000))
                     }
                 }
                 true
@@ -441,22 +468,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun setOfflineSave(){
-        buttonSaveFromMap.setOnClickListener {
-            databaseForOffline.refreshOfflineItems(itemsOnMap)
-        }
-    }
-
-    private fun delDB(){
-        val myHelper = OfflineItemDBHelper(this)
-        var sqlDB : SQLiteDatabase = myHelper.readableDatabase
-        myHelper.onUpgrade(sqlDB, 1, 2)
-        var cursor : Cursor
-        cursor = sqlDB.rawQuery("DROP TABLE voca;", null)
-        cursor.close()
-        sqlDB.close()
-    }
-
     private fun setToggleButtonPharmacy(){
         buttonPharmaciesVisible.setOnCheckedChangeListener { compoundButton, isOn ->
             itemsOnMap.filter {
@@ -477,6 +488,35 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 compoundButton.background = getDrawable(R.color.colorRedCloud)
             else
                 compoundButton.background = getDrawable(R.color.transparency)
+        }
+    }
+
+    private fun setOfflineSave(){
+        buttonSaveFromMap.setOnClickListener {
+            databaseForOffline.refreshOfflineItems(itemsOnMap)
+        }
+    }
+
+    private fun initializeLatestPreference() {
+        val loadingPreference = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        buttonAEDVisible.isChecked = loadingPreference.getBoolean(PREF_KEY_AED_CHECKED, false)
+        buttonShelterVisible.isChecked = loadingPreference.getBoolean(PREF_KEY_SHELTERS_CHECKED, false)
+        buttonEmergencyRoomVisible.isChecked =
+            loadingPreference.getBoolean(PREF_KEY_EMERGENCY_ROOM_CHECKED, false)
+        buttonPharmaciesVisible.isChecked = loadingPreference.getBoolean(PREF_KEY_PHARMACY_CHECKED, false)
+
+        map?.let{ map ->
+            map.moveCamera(CameraUpdate.scrollAndZoomTo(
+                LatLng(
+                    loadingPreference.getFloat(PREF_KEY_CAMERA_LATITUDE
+                        , defaultCameraPosition.latitude.toFloat()).toDouble()
+
+                    , loadingPreference.getFloat(PREF_KEY_CAMERA_LONGITUDE
+                        , defaultCameraPosition.longitude.toFloat()).toDouble()
+                )
+                , loadingPreference.getFloat(PREF_KEY_CAMERA_ZOOM
+                    , defaultCameraZoom.toFloat()).toDouble()
+            ))
         }
     }
 
@@ -527,7 +567,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun setMapToNowLocation(){
         locationSource.requestNowLocation(MOVE_TO_NOW_LOCATION) {
             it?.let{
-                map?.moveCamera(CameraUpdate.scrollTo(LatLng(it)))
+                map?.moveCamera(CameraUpdate.scrollTo(LatLng(it)).animate(CameraAnimation.Fly, 1600))
                 toast("조회 완료")
             }
         }
@@ -622,5 +662,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         height = markerHeight
         icon = MarkerIcons.BLACK
         iconTintColor = Color.RED
+        setOnClickListener {
+            map?.moveCamera(CameraUpdate.scrollTo(position).animate(CameraAnimation.Easing, 1000))
+            true
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        val savingPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        val prefEditor = savingPreferences.edit()
+        prefEditor.putBoolean(PREF_KEY_AED_CHECKED, buttonAEDVisible.isChecked)
+        prefEditor.putBoolean(PREF_KEY_SHELTERS_CHECKED, buttonShelterVisible.isChecked)
+        prefEditor.putBoolean(PREF_KEY_EMERGENCY_ROOM_CHECKED, buttonEmergencyRoomVisible.isChecked)
+        prefEditor.putBoolean(PREF_KEY_PHARMACY_CHECKED, buttonPharmaciesVisible.isChecked)
+        map?.let { map ->
+            prefEditor.putFloat(PREF_KEY_CAMERA_LATITUDE, map.cameraPosition.target.latitude.toFloat())
+            prefEditor.putFloat(PREF_KEY_CAMERA_LONGITUDE, map.cameraPosition.target.longitude.toFloat())
+            prefEditor.putFloat(PREF_KEY_CAMERA_ZOOM, map.cameraPosition.zoom.toFloat())
+        }
+        prefEditor.apply()
     }
 }
