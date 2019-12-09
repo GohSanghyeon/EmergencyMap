@@ -160,6 +160,7 @@ class ItemListActivity: AppCompatActivity() {
                     startActivity<MainActivity>(
                         MainActivity.ITEMS_NUMBERS_OF_REGIONS to strItemNumbersOfRegions
                     )
+                    finish()
                     toast("인터넷 연결을 확인했습니다.")
                 }.execute()
             }

@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         private var markerHeight = 100
         private var limitDistance = 0.1        //Coordinate Compensation Value
         private var minZoom = 5.0
+        private var markerLevelBoundaryZoom = 12.0
 
         val defaultCameraPosition = LatLng(37.30260779, 127.9211684)
         val defaultCameraZoom = 6.0
@@ -166,11 +167,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val netMonitor = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         netMonitor.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback(){
             override fun onLost(network: Network) {
+                netMonitor.unregisterNetworkCallback(this)
                 toast("인터넷 연결이 중단되었습니다.")
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
 
                 startActivity<ItemListActivity>(
                     ItemListActivity.KEY_MODE to ItemListActivity.OFFLINE
                 )
+                finish()
             }
         })
     }
@@ -220,7 +224,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             map.uiSettings.isCompassEnabled = false
             map.minZoom = minZoom
             map.addOnCameraIdleListener {
-                isItemMarkerZoomLevel = map.cameraPosition.zoom > 12.0
+                isItemMarkerZoomLevel = map.cameraPosition.zoom > markerLevelBoundaryZoom
 
                 refreshAllMarkersVisibility(isItemMarkerZoomLevel)
 
@@ -298,7 +302,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         }
                     }
 
-                taskDownload.execute()
+                if(map.cameraPosition.zoom <= markerLevelBoundaryZoom)
+                    taskDownload.execute()
             }
 
             initializeLatestPreference()
