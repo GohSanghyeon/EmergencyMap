@@ -50,8 +50,8 @@ class OfflineItemDBHelper(private val context : Context)
                     + item.itemDistinction + "','"
                     //+ item.itemAttributes[address]!!.replace("\'", "\'\'")!!.replace("\"", "\"\"")+"','"
                     //+ item.itemAttributes[place]!!.replace("\'", "\'\'")!!.replace("\"", "\"\"")+"','"
-                    + item.itemAttributes[address]!!.replace("\'", "").replace("\"", "")
-                    + item.itemAttributes[place]!!.replace("\'", "").replace("\"", "")
+                    + item.itemAttributes[address]!!.replace("\'", "").replace("\"", "") + "','"
+                    + item.itemAttributes[place]!!.replace("\'", "").replace("\"", "") + "','"
                     + item.itemAttributes[tel]+"');")
 
             Toast.makeText(context, "저장되었습니다.", Toast.LENGTH_SHORT).show()
